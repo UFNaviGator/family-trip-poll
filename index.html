@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jarrard Family Trip 2027 — Vote</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ── Reset & Base ────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f7f4ef;
+    color: #2c2a24;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── Layout ──────────────────────────────────────────────── */
+  .app { max-width: 960px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  /* ── Header ──────────────────────────────────────────────── */
+  .header { text-align: center; margin-bottom: 3rem; }
+  .header-eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: #a08060; margin-bottom: 0.65rem;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 600;
+    color: #1a3a4a; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 0.75rem;
+  }
+  .header p { font-size: 0.92rem; color: #666; max-width: 580px; margin: 0 auto; line-height: 1.7; }
+  .header-divider {
+    width: 48px; height: 2px; background: linear-gradient(90deg, #c45a1a, #1a5a7a);
+    margin: 1.25rem auto 0; border-radius: 2px;
+  }
+
+  /* ── Step headers ────────────────────────────────────────── */
+  .step-header {
+    display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
+  }
+  .step-num {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #1a3a4a; color: #fff;
+    font-size: 0.72rem; font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-title { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #888; }
+
+  /* ── Cards / Panels ──────────────────────────────────────── */
+  .panel {
+    background: #fff; border: 1px solid #e8e3da;
+    border-radius: 14px; padding: 1.5rem; margin-bottom: 1.75rem;
+  }
+  .panel-dark {
+    background: #1a3a4a; border-radius: 14px;
+    padding: 1.5rem; margin-bottom: 1.75rem;
+  }
+
+  /* ── Email section ───────────────────────────────────────── */
+  .email-row { display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap; }
+  .email-field { flex: 1; min-width: 200px; }
+  .form-label {
+    display: block; font-size: 0.72rem; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.1em; color: #888; margin-bottom: 0.4rem;
+  }
+  input[type="email"], textarea {
+    width: 100%; border: 1px solid #e0dbd0; border-radius: 9px;
+    padding: 0.65rem 1rem; font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem; color: #2c2a24; background: #faf8f4;
+    outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input[type="email"]:focus, textarea:focus {
+    border-color: #1a3a4a; background: #fff;
+    box-shadow: 0 0 0 3px rgba(26,58,74,0.08);
+  }
+  .email-note { font-size: 0.72rem; color: #aaa; margin-top: 0.35rem; }
+
+  /* ── Two-column ranking layout ───────────────────────────── */
+  .rank-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 0.5rem; }
+  .col-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.85rem; }
+  .col-header h2 { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 600; }
+  .fl-h { color: #c45a1a; } .mi-h { color: #1a5a7a; }
+  .col-hint { font-size: 0.72rem; color: #bbb; text-align: center; margin-top: 0.5rem; }
+
+  /* ── Rank items ──────────────────────────────────────────── */
+  .rank-list { display: flex; flex-direction: column; gap: 0.55rem; }
+  .rank-item {
+    display: flex; align-items: center; gap: 0.75rem;
+    background: #fff; border: 1px solid #e8e3da;
+    border-radius: 10px; padding: 0.7rem 0.9rem;
+    cursor: grab; transition: box-shadow 0.15s, border-color 0.15s, background 0.15s;
+    user-select: none; position: relative;
+  }
+  .rank-item:hover { border-color: #c8c0b4; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .rank-item:active { cursor: grabbing; }
+  .rank-item.dragging { opacity: 0.45; border-style: dashed; }
+  .rank-item.dragover { border-color: #1a3a4a; background: #f0f5f8; }
+  .rank-item.selected { border-color: #e8963a; background: #fff9f4; box-shadow: 0 0 0 2px rgba(232,150,58,0.2); }
+  .rank-item.rank-1 { border-left: 3px solid #d4a843; }
+  .rank-item.rank-2 { border-left: 3px solid #b0aca6; }
+  .rank-item.rank-3 { border-left: 3px solid #b08060; }
+  .rank-num {
+    font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 600;
+    min-width: 1.2rem; text-align: center;
+  }
+  .rank-1 .rank-num { color: #d4a843; }
+  .rank-2 .rank-num { color: #b0aca6; }
+  .rank-3 .rank-num { color: #b08060; }
+  .rank-content { flex: 1; min-width: 0; }
+  .rank-name { font-size: 0.84rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rank-sub { font-size: 0.72rem; color: #999; margin-top: 1px; }
+  .rank-handle { color: #d0c8be; font-size: 1rem; cursor: grab; flex-shrink: 0; }
+
+  /* ── Detail panel ────────────────────────────────────────── */
+  .detail-empty { text-align: center; color: #ccc; font-size: 0.875rem; padding: 2.5rem 0; font-style: italic; }
+  .detail-name {
+    font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 600;
+    color: #1a3a4a; margin-bottom: 1rem;
+  }
+  .detail-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.1rem; border-radius: 10px; overflow: hidden; }
+  .detail-photo {
+    aspect-ratio: 16/9; background: #f0ece4; border-radius: 8px;
+    overflow: hidden; position: relative;
+  }
+  .detail-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .detail-photo-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.55));
+    color: #fff; font-size: 0.7rem; padding: 0.5rem 0.6rem 0.4rem;
+  }
+  .detail-photo-placeholder {
+    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    color: #c0b8ac; font-size: 0.75rem; flex-direction: column; gap: 0.4rem;
+  }
+  .detail-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin-bottom: 1rem; }
+  .detail-stat { background: #f7f4ef; border-radius: 8px; padding: 0.55rem 0.75rem; }
+  .detail-stat-label { font-size: 0.67rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.08em; }
+  .detail-stat-value { font-size: 0.85rem; font-weight: 500; color: #2c2a24; margin-top: 2px; }
+  .detail-tags { margin-bottom: 0.75rem; }
+  .detail-tag {
+    display: inline-block; border-radius: 5px; padding: 3px 9px;
+    font-size: 0.72rem; font-weight: 500; margin: 2px;
+  }
+  .detail-tag.fl { background: #fef0e4; color: #c45a1a; }
+  .detail-tag.mi { background: #e4f0f8; color: #1a5a7a; }
+  .detail-caveat {
+    font-size: 0.8rem; line-height: 1.55; padding: 0.55rem 0.85rem;
+    border-radius: 8px; border-left: 3px solid;
+  }
+  .detail-caveat.fl { background: #fff9f4; color: #c45a1a; border-color: #e8963a; }
+  .detail-caveat.mi { background: #f0f7fb; color: #1a5a7a; border-color: #5aA0c8; }
+
+  /* ── Compare panel ───────────────────────────────────────── */
+  .compare-header {
+    font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #89b4c9; text-align: center; margin-bottom: 1.25rem;
+  }
+  .compare-grid { display: grid; grid-template-columns: 1fr 36px 1fr; gap: 0.5rem; align-items: start; }
+  .compare-side-name {
+    font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 600;
+    margin-bottom: 0.75rem; line-height: 1.3;
+  }
+  .compare-side-name.fl { color: #f5b87a; } .compare-side-name.mi { color: #7ac5e0; }
+  .compare-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.32rem 0; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 0.8rem;
+  }
+  .compare-row:last-child { border-bottom: none; }
+  .compare-row-label { color: #89b4c9; font-size: 0.7rem; }
+  .compare-row-val { font-weight: 500; }
+  .compare-vs { display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.25); font-size: 0.8rem; padding-top: 1.75rem; }
+  .val-good { color: #7adbb2; } .val-bad { color: #f5a07a; } .val-neutral { color: #e8e4dc; }
+
+  /* ── Destination slider ──────────────────────────────────── */
+  .slider-labels { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.1rem; gap: 0.5rem; }
+  .slider-label {
+    font-family: 'Playfair Display', serif; font-size: 0.88rem; font-weight: 600;
+    max-width: 38%; line-height: 1.35;
+  }
+  .slider-label.fl { color: #c45a1a; }
+  .slider-label.mi { color: #1a5a7a; text-align: right; }
+  .slider-label.mid { font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: #aaa; font-weight: 400; text-align: center; max-width: 24%; }
+  .pips { display: flex; justify-content: space-between; align-items: center; padding: 0 4px; position: relative; }
+  .pips::before {
+    content: ''; position: absolute; left: 12px; right: 12px; top: 50%;
+    transform: translateY(-50%); height: 2px; background: #e8e3da; border-radius: 2px; z-index: 0;
+  }
+  .pip {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid #e0d8cc; background: #fff;
+    cursor: pointer; position: relative; z-index: 1;
+    transition: all 0.15s; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .pip:hover { border-color: #1a3a4a; transform: scale(1.1); }
+  .pip.active { background: #1a3a4a; border-color: #1a3a4a; box-shadow: 0 0 0 4px rgba(26,58,74,0.12); }
+  .pip.active::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #fff; }
+  .pip-labels { display: flex; justify-content: space-between; padding: 0.5rem 4px 0; }
+  .pip-label { font-size: 0.68rem; color: #bbb; text-align: center; width: 22px; line-height: 1.2; }
+  .pip-label.active { color: #1a3a4a; font-weight: 500; }
+  .slider-result { text-align: center; margin-top: 1rem; font-style: italic; color: #888; font-size: 0.85rem; min-height: 1.4rem; }
+
+  /* ── Comment ─────────────────────────────────────────────── */
+  textarea { resize: vertical; min-height: 90px; line-height: 1.65; }
+
+  /* ── Submit ──────────────────────────────────────────────── */
+  .submit-btn {
+    width: 100%; background: #1a3a4a; color: #fff; border: none;
+    border-radius: 11px; padding: 1rem; font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 500; cursor: pointer; letter-spacing: 0.02em;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .submit-btn:hover:not(:disabled) { background: #24506a; }
+  .submit-btn:active:not(:disabled) { transform: scale(0.99); }
+  .submit-btn:disabled { background: #c8c0b4; cursor: not-allowed; }
+  .status-msg {
+    text-align: center; font-size: 0.83rem; padding: 0.65rem 1rem;
+    border-radius: 8px; margin-top: 0.85rem; display: none; line-height: 1.5;
+  }
+  .status-msg.success { background: #eaf3de; color: #3b6d11; }
+  .status-msg.error   { background: #fcebeb; color: #a32d2d; }
+  .status-msg.info    { background: #e6f1fb; color: #185fa5; }
+
+  /* ── Responsive ──────────────────────────────────────────── */
+  @media (max-width: 640px) {
+    .header h1 { font-size: 1.7rem; }
+    .rank-cols { grid-template-columns: 1fr; }
+    .detail-stats { grid-template-columns: 1fr 1fr; }
+    .detail-photos { grid-template-columns: 1fr; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .compare-vs { display: none; }
+    .slider-label { font-size: 0.78rem; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── HEADER ── -->
+  <div class="header">
+    <div class="header-eyebrow">Jarrard Family · Biennial Trip</div>
+    <h1>2027 Destination Vote</h1>
+    <p>Rank your house preferences for each destination, click any option for full details, then tell us where your heart really is.</p>
+    <div class="header-divider"></div>
+  </div>
+
+  <!-- ── STEP 1: EMAIL ── -->
+  <div class="step-header"><div class="step-num">1</div><div class="step-title">Who are you?</div></div>
+  <div class="panel">
+    <div class="email-row">
+      <div class="email-field">
+        <label class="form-label" for="email-input">Your email address</label>
+        <input type="email" id="email-input" placeholder="you@email.com" autocomplete="email">
+        <div class="email-note">Used only to track your response and let you update it. Not visible to other voters.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 2: RANKINGS ── -->
+  <div class="step-header"><div class="step-num">2</div><div class="step-title">Rank each destination's options — drag to reorder, click for details</div></div>
+  <div class="panel">
+    <div class="rank-cols">
+      <div>
+        <div class="col-header"><h2 class="fl-h">🌊 Florida</h2></div>
+        <div class="rank-list" id="fl-list"></div>
+      </div>
+      <div>
+        <div class="col-header"><h2 class="mi-h">🌲 Michigan</h2></div>
+        <div class="rank-list" id="mi-list"></div>
+      </div>
+    </div>
+    <div class="col-hint">Drag to reorder · Click any option to see full details below</div>
+  </div>
+
+  <!-- ── STEP 3: DETAIL VIEW ── -->
+  <div class="step-header"><div class="step-num">3</div><div class="step-title">Option details</div></div>
+  <div class="panel" id="detail-panel">
+    <div class="detail-empty">Click any house option above to see photos and full details</div>
+  </div>
+
+  <!-- ── STEP 4: COMPARISON ── -->
+  <div class="step-header"><div class="step-num">4</div><div class="step-title">Your top picks — head to head</div></div>
+  <div class="panel-dark">
+    <div class="compare-header">Your #1 Florida vs Your #1 Michigan — updates as you rank</div>
+    <div class="compare-grid" id="compare-grid"></div>
+  </div>
+
+  <!-- ── STEP 5: SLIDER ── -->
+  <div class="step-header"><div class="step-num">5</div><div class="step-title">Destination preference</div></div>
+  <div class="panel">
+    <div class="slider-labels">
+      <div class="slider-label fl">Florida<br>or Die! 🌴</div>
+      <div class="slider-label mid">Meh,<br>either way</div>
+      <div class="slider-label mi">Michigan<br>or Bust! 🏖</div>
+    </div>
+    <div class="pips" id="pips"></div>
+    <div class="pip-labels" id="pip-labels"></div>
+    <div class="slider-result" id="slider-result">— tap a point to register your preference —</div>
+  </div>
+
+  <!-- ── STEP 6: COMMENT ── -->
+  <div class="step-header"><div class="step-num">6</div><div class="step-title">Anything to add? (anonymous)</div></div>
+  <div class="panel">
+    <textarea id="comment-input" placeholder="Make your case, raise a concern, or just weigh in. This is stored anonymously — say what you really think."></textarea>
+  </div>
+
+  <!-- ── SUBMIT ── -->
+  <button class="submit-btn" id="submit-btn" onclick="submitVote()">Submit My Vote</button>
+  <div class="status-msg" id="status-msg"></div>
+
+</div><!-- /app -->
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   CONFIG — edit this section to update house data & photos
+   ══════════════════════════════════════════════════════════
+
+   PHOTOS: each option has { a, b } for the two houses.
+   Use either:
+     - a relative path:  "images/fl1-a.jpg"  (file in /images/ folder in repo)
+     - a full URL:       "https://example.com/photo.jpg"
+     - null:             placeholder is shown
+   ══════════════════════════════════════════════════════════ */
+
+const SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+const PHOTOS = {
+  fl1: { a: null, b: null, labelA: 'Seven Seas', labelB: 'Sea-La-Vie' },
+  fl2: { a: null, b: null, labelA: 'Casa Bella Luca', labelB: 'AB Sea' },
+  fl3: { a: null, b: null, labelA: 'Royal Seas', labelB: 'Amethyst' },
+  mi1: { a: null, b: null, labelA: 'OG Luxury', labelB: 'Feirin de Magnificent' },
+  mi2: { a: null, b: null, labelA: 'Lamb', labelB: 'Victorian Painted Lady' },
+  mi3: { a: null, b: null, labelA: '6-Bed Home', labelB: 'Bridgewater' },
+};
+
+const FL_HOUSES = [
+  {
+    id: 'fl1', dest: 'fl',
+    name: 'Seven Seas + Sea-La-Vie',
+    beds: '7 + 5', baths: '6 + 4',
+    beach: 'Yes (main) / Walk (2nd)',
+    pool: 'Yes / Yes',
+    cost: '~$27,000',
+    extras: ['Wrap-around balcony', 'Splash pad for the kids', 'Double fridge & outdoor grill', 'Pool table in garage', 'Multiple covered sitting areas'],
+    caveat: 'Secondary house is not beachfront — short walk to beach access. Both houses have pools.'
+  },
+  {
+    id: 'fl2', dest: 'fl',
+    name: 'Casa Bella Luca + AB Sea',
+    beds: '7 + 5', baths: '6 + 5',
+    beach: 'Yes (main) / No (2nd)',
+    pool: 'Yes / Yes',
+    cost: '~$23,000',
+    extras: ['Top deck with panoramic gulf views', 'Hot tub at AB Sea', 'We know this house — the "Cartel house"', 'Double fridge, large outdoor dining', 'Walking distance between houses'],
+    caveat: 'AB Sea is pool-only, no beach access. Walking distance to main house. Most budget-friendly FL option.'
+  },
+  {
+    id: 'fl3', dest: 'fl',
+    name: 'Royal Seas + Amethyst',
+    beds: '6 + 5', baths: '5 + 4',
+    beach: 'Yes (main) / No (2nd)',
+    pool: 'Yes / Yes',
+    cost: '~$25,500',
+    extras: ['Theater room', 'Game room with arcade', 'Private boardwalk to beach', 'Large covered lanai & fire pit', 'Hot tub on main house deck'],
+    caveat: 'Amethyst is the smaller house — tighter quarters for larger family units. Royal Seas has the best amenities of any FL option.'
+  },
+];
+
+const MI_HOUSES = [
+  {
+    id: 'mi1', dest: 'mi',
+    name: 'OG Luxury + Feirin de Magnificent',
+    beds: '7 + 5', baths: '6 + 4',
+    beach: 'Walk (~5 min) / No',
+    pool: 'Yes / Yes',
+    cost: '~$27,000',
+    extras: ['Both houses have private pools', 'High-end finishes throughout', 'Fire pit, kayaks, lake gear included', 'Closest Michigan option to the water', 'Great restaurant & brewery scene nearby'],
+    caveat: '⚠️ Neither house is directly on the beach. ~5 min walk to public lake access. No private beachfront at either property.'
+  },
+  {
+    id: 'mi2', dest: 'mi',
+    name: 'Lamb + Victorian Painted Lady',
+    beds: '7 + 5', baths: '5 + 4',
+    beach: 'No (~0.5 mi walk)',
+    pool: 'Yes / No',
+    cost: '~$21,000',
+    extras: ['Most affordable Michigan option', 'Victorian house has incredible character', 'Large wraparound porch', 'Only 4 houses apart', 'Good access to South Haven dining'],
+    caveat: '⚠️ No beach access from either house — 0.5 mile walk to the lake. Only the main house has a pool. Victorian Painted Lady has no pool.'
+  },
+  {
+    id: 'mi3', dest: 'mi',
+    name: '6-Bed Home + Bridgewater',
+    beds: '6 + 6', baths: '5 + 5',
+    beach: 'No (short drive)',
+    pool: 'Yes / Club only',
+    cost: '~$27,000',
+    extras: ['Most total rooms of any Michigan option', 'Tennis court on property', 'Club pool access at Bridgewater', 'Putt-putt & playground on site', 'Great for splitting into sub-families'],
+    caveat: '⚠️ Beach requires a short drive — not walkable. Bridgewater has club pool access only, not private. Best Michigan option for space.'
+  },
+];
+
+/* ══════════════════════════════════════════════════════════
+   STATE
+   ══════════════════════════════════════════════════════════ */
+let flOrder = [0, 1, 2];
+let miOrder = [0, 1, 2];
+let selectedId = null;
+let sliderVal = null;
+let dragSrc = null;
+const SLIDER_LABELS = ['Florida or Die!', 'Leaning Florida', 'Meh, either way', 'Leaning Michigan', 'Michigan or Bust!'];
+
+/* ══════════════════════════════════════════════════════════
+   RENDER FUNCTIONS
+   ══════════════════════════════════════════════════════════ */
+function renderLists() {
+  renderList('fl-list', FL_HOUSES, flOrder, 'fl');
+  renderList('mi-list', MI_HOUSES, miOrder, 'mi');
+  updateCompare();
+}
+
+function renderList(listId, houses, order, dest) {
+  const el = document.getElementById(listId);
+  el.innerHTML = '';
+  order.forEach((idx, rank) => {
+    const h = houses[idx];
+    const div = document.createElement('div');
+    div.className = `rank-item rank-${rank + 1}${selectedId === h.id ? ' selected' : ''}`;
+    div.draggable = true;
+    div.dataset.idx = String(idx);
+    div.dataset.dest = dest;
+    div.innerHTML = `
+      <span class="rank-num">${rank + 1}</span>
+      <div class="rank-content">
+        <div class="rank-name">${h.name}</div>
+        <div class="rank-sub">${h.beds} beds · ${h.cost}</div>
+      </div>
+      <span class="rank-handle">⠿</span>`;
+    div.addEventListener('click', () => showDetail(h));
+    div.addEventListener('dragstart', e => {
+      dragSrc = { dest, idx };
+      div.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    div.addEventListener('dragend', () => {
+      div.classList.remove('dragging');
+      document.querySelectorAll('.rank-item').forEach(x => x.classList.remove('dragover'));
+    });
+    div.addEventListener('dragover', e => { e.preventDefault(); div.classList.add('dragover'); });
+    div.addEventListener('dragleave', () => div.classList.remove('dragover'));
+    div.addEventListener('drop', e => {
+      e.preventDefault();
+      if (!dragSrc || dragSrc.dest !== dest) return;
+      const arr = dest === 'fl' ? flOrder : miOrder;
+      const fromPos = arr.indexOf(dragSrc.idx);
+      const toPos = arr.indexOf(parseInt(div.dataset.idx));
+      if (fromPos === toPos) return;
+      const [moved] = arr.splice(fromPos, 1);
+      arr.splice(toPos, 0, moved);
+      renderLists();
+    });
+    el.appendChild(div);
+  });
+}
+
+function photoHTML(id, side) {
+  const p = PHOTOS[id];
+  const src = side === 'a' ? p.a : p.b;
+  const label = side === 'a' ? p.labelA : p.labelB;
+  if (!src) {
+    return `<div class="detail-photo">
+      <div class="detail-photo-placeholder">
+        <span style="font-size:1.5rem">🏠</span>
+        <span>${label}</span>
+        <span style="font-size:0.65rem;color:#c8c0b4">Photo coming soon</span>
+      </div>
+    </div>`;
+  }
+  return `<div class="detail-photo">
+    <img src="${src}" alt="${label}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'detail-photo-placeholder\\'><span>🏠</span><span>${label}</span></div>'">
+    <div class="detail-photo-label">${label}</div>
+  </div>`;
+}
+
+function showDetail(h) {
+  selectedId = h.id;
+  const dest = h.dest;
+  document.getElementById('detail-panel').innerHTML = `
+    <div class="detail-name">${h.name}</div>
+    <div class="detail-photos">
+      ${photoHTML(h.id, 'a')}
+      ${photoHTML(h.id, 'b')}
+    </div>
+    <div class="detail-stats">
+      <div class="detail-stat"><div class="detail-stat-label">Total Cost</div><div class="detail-stat-value">${h.cost}</div></div>
+      <div class="detail-stat"><div class="detail-stat-label">Bedrooms</div><div class="detail-stat-value">${h.beds}</div></div>
+      <div class="detail-stat"><div class="detail-stat-label">Bathrooms</div><div class="detail-stat-value">${h.baths}</div></div>
+      <div class="detail-stat"><div class="detail-stat-label">Beachfront</div><div class="detail-stat-value">${h.beach}</div></div>
+      <div class="detail-stat"><div class="detail-stat-label">Pool</div><div class="detail-stat-value">${h.pool}</div></div>
+    </div>
+    <div class="detail-tags">${h.extras.map(x => `<span class="detail-tag ${dest}">${x}</span>`).join('')}</div>
+    <div class="detail-caveat ${dest}">${h.caveat}</div>`;
+  renderLists();
+}
+
+function updateCompare() {
+  const fl = FL_HOUSES[flOrder[0]];
+  const mi = MI_HOUSES[miOrder[0]];
+  const rows = [
+    { label: 'Cost',       flv: fl.cost,  miv: mi.cost },
+    { label: 'Beachfront', flv: fl.beach, miv: mi.beach },
+    { label: 'Pool',       flv: fl.pool,  miv: mi.pool },
+    { label: 'Bedrooms',   flv: fl.beds,  miv: mi.beds },
+    { label: 'Bathrooms',  flv: fl.baths, miv: mi.baths },
+  ];
+
+  function cls(label, val) {
+    if (label === 'Beachfront') return val.startsWith('Yes') ? 'val-good' : 'val-bad';
+    if (label === 'Pool') return val.includes('Yes / Yes') ? 'val-good' : (val.includes('Club') || val.includes('No') ? 'val-bad' : 'val-neutral');
+    return 'val-neutral';
+  }
+
+  function makeCol(h, side) {
+    return `<div>
+      <div class="compare-side-name ${side}">${h.name}</div>
+      ${rows.map(r => `
+        <div class="compare-row">
+          <span class="compare-row-label">${r.label}</span>
+          <span class="compare-row-val ${cls(r.label, side === 'fl' ? r.flv : r.miv)}">${side === 'fl' ? r.flv : r.miv}</span>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  document.getElementById('compare-grid').innerHTML =
+    makeCol(fl, 'fl') +
+    `<div class="compare-vs">vs</div>` +
+    makeCol(mi, 'mi');
+}
+
+/* ══════════════════════════════════════════════════════════
+   SLIDER
+   ══════════════════════════════════════════════════════════ */
+function buildSlider() {
+  const pipsEl = document.getElementById('pips');
+  const labelsEl = document.getElementById('pip-labels');
+  pipsEl.innerHTML = '';
+  labelsEl.innerHTML = '';
+  for (let i = 0; i < 5; i++) {
+    const pip = document.createElement('div');
+    pip.className = 'pip' + (sliderVal === i ? ' active' : '');
+    pip.title = SLIDER_LABELS[i];
+    pip.addEventListener('click', () => { sliderVal = i; buildSlider(); });
+    pipsEl.appendChild(pip);
+    const lbl = document.createElement('div');
+    lbl.className = 'pip-label' + (sliderVal === i ? ' active' : '');
+    lbl.textContent = i + 1;
+    labelsEl.appendChild(lbl);
+  }
+  document.getElementById('slider-result').textContent =
+    sliderVal !== null ? `"${SLIDER_LABELS[sliderVal]}"` : '— tap a point to register your preference —';
+}
+
+/* ══════════════════════════════════════════════════════════
+   SUBMIT
+   ══════════════════════════════════════════════════════════ */
+async function submitVote() {
+  const email = document.getElementById('email-input').value.trim();
+  const comment = document.getElementById('comment-input').value.trim();
+
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    showStatus('Please enter a valid email address.', 'error'); return;
+  }
+  if (sliderVal === null) {
+    showStatus('Please select your destination preference in Step 5.', 'error'); return;
+  }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+  showStatus('Saving your response…', 'info');
+
+  const payload = {
+    email,
+    fl_rank_1: FL_HOUSES[flOrder[0]].name,
+    fl_rank_2: FL_HOUSES[flOrder[1]].name,
+    fl_rank_3: FL_HOUSES[flOrder[2]].name,
+    mi_rank_1: MI_HOUSES[miOrder[0]].name,
+    mi_rank_2: MI_HOUSES[miOrder[1]].name,
+    mi_rank_3: MI_HOUSES[miOrder[2]].name,
+    destination_pref: SLIDER_LABELS[sliderVal],
+    destination_score: sliderVal + 1,
+    comment: comment || '',
+    timestamp: new Date().toISOString(),
+  };
+
+  if (SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    await new Promise(r => setTimeout(r, 700));
+    showStatus('✓ Demo mode — vote recorded locally. Wire up the Apps Script URL to go live.', 'success');
+    btn.textContent = 'Vote Submitted ✓';
+    return;
+  }
+
+  try {
+    const resp = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+    const data = await resp.json();
+    if (data.status === 'ok' || data.status === 'updated') {
+      showStatus(
+        data.status === 'updated'
+          ? '✓ Your vote has been updated!'
+          : '✓ Your vote has been recorded — thanks!',
+        'success'
+      );
+      btn.textContent = 'Vote Submitted ✓';
+    } else {
+      throw new Error(data.message || 'Unknown error');
+    }
+  } catch (e) {
+    showStatus('Something went wrong. Please try again, or contact Jeff directly.', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Submit My Vote';
+  }
+}
+
+function showStatus(msg, type) {
+  const el = document.getElementById('status-msg');
+  el.textContent = msg;
+  el.className = 'status-msg ' + type;
+  el.style.display = 'block';
+}
+
+/* ══════════════════════════════════════════════════════════
+   INIT
+   ══════════════════════════════════════════════════════════ */
+renderLists();
+buildSlider();
+</script>
+</body>
+</html>
