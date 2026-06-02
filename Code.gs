@@ -133,9 +133,62 @@ function doPost(e) {
   }
 }
 
-// ── GET handler for quick health check ───────────────────────────────────────
-function doGet() {
+// ── GET handler — health check or results data ────────────────────────────────
+function doGet(e) {
+  const action = e && e.parameter && e.parameter.action;
+
+  if (action === 'results') {
+    return getResults();
+  }
+
   return ContentService
     .createTextOutput(JSON.stringify({ status: 'ok', message: 'Jarrard Trip Poll API is live.' }))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+function getResults() {
+  try {
+    const ss        = SpreadsheetApp.openById(SHEET_ID);
+    const respSheet = ss.getSheetByName('Responses');
+    const rSheet    = ss.getSheetByName('Respondents');
+
+    if (!respSheet) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'empty', responses: [], respondentCount: 0 }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // Raw rows (skip header)
+    const rows = respSheet.getDataRange().getValues().slice(1);
+
+    const responses = rows.map(r => ({
+      fl_rank_1:          r[1]  || '',
+      fl_rank_2:          r[2]  || '',
+      fl_rank_3:          r[3]  || '',
+      mi_rank_1:          r[4]  || '',
+      mi_rank_2:          r[5]  || '',
+      mi_rank_3:          r[6]  || '',
+      destination_pref:   r[7]  || '',
+      destination_score:  Number(r[8]) || 0,
+      comment:            r[9]  || '',
+      timestamp:          r[10] || '',
+    }));
+
+    // Respondent count (total invited vs responded)
+    const respondentCount = rSheet ? Math.max(0, rSheet.getLastRow() - 1) : 0;
+
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        status: 'ok',
+        responses,
+        respondentCount,
+        generatedAt: new Date().toISOString(),
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', message: err.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }

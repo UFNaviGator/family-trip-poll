@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jarrard Family Trip 2027 — Results</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: #f7f4ef; color: #2c2a24; min-height: 100vh; line-height: 1.6; }
+  .app { max-width: 960px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+
+  /* Header */
+  .header { text-align: center; margin-bottom: 3rem; }
+  .header-eyebrow { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: #a08060; margin-bottom: 0.65rem; }
+  .header h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 600; color: #1a3a4a; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 0.5rem; }
+  .header-meta { font-size: 0.82rem; color: #aaa; }
+  .header-divider { width: 48px; height: 2px; background: linear-gradient(90deg, #c45a1a, #1a5a7a); margin: 1rem auto 0; border-radius: 2px; }
+
+  /* Section headers */
+  .section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; margin-top: 2.25rem; }
+  .section-icon { font-size: 1rem; }
+  .section-title { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #888; }
+
+  /* Panels */
+  .panel { background: #fff; border: 1px solid #e8e3da; border-radius: 14px; padding: 1.5rem; margin-bottom: 1rem; }
+  .panel-dark { background: #1a3a4a; border-radius: 14px; padding: 1.5rem; margin-bottom: 1rem; }
+
+  /* Verdict */
+  .verdict-badge {
+    display: inline-block; font-family: 'Playfair Display', serif;
+    font-size: 1rem; font-weight: 600; padding: 0.4rem 1.1rem;
+    border-radius: 99px; margin-bottom: 1rem;
+  }
+  .verdict-badge.fl { background: #fef0e4; color: #c45a1a; border: 1px solid #f5c89a; }
+  .verdict-badge.mi { background: #e4f0f8; color: #1a5a7a; border: 1px solid #9acde8; }
+  .verdict-badge.tied { background: #f5f3ef; color: #888; border: 1px solid #e0dbd0; }
+  .verdict-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 600; color: #1a3a4a; margin-bottom: 0.4rem; line-height: 1.3; }
+  .verdict-sub { font-size: 0.85rem; color: #888; }
+
+  /* Stat cards */
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
+  .stat-card { border-radius: 10px; padding: 0.85rem 1rem; text-align: center; }
+  .stat-card.fl { background: #fef0e4; }
+  .stat-card.mi { background: #e4f0f8; }
+  .stat-card.neu { background: #f5f3ef; }
+  .stat-num { font-size: 1.75rem; font-weight: 600; line-height: 1; margin-bottom: 4px; }
+  .stat-card.fl .stat-num { color: #c45a1a; }
+  .stat-card.mi .stat-num { color: #1a5a7a; }
+  .stat-card.neu .stat-num { color: #888; }
+  .stat-label { font-size: 0.72rem; }
+  .stat-card.fl .stat-label { color: #c45a1a; }
+  .stat-card.mi .stat-label { color: #1a5a7a; }
+  .stat-card.neu .stat-label { color: #aaa; }
+
+  /* Score bar */
+  .score-bar-wrap { margin-bottom: 0.5rem; }
+  .score-bar-labels { display: flex; justify-content: space-between; font-size: 0.72rem; color: #aaa; margin-bottom: 0.4rem; }
+  .score-bar-track { height: 10px; background: #f0ece4; border-radius: 99px; overflow: hidden; position: relative; }
+  .score-bar-fill { height: 100%; border-radius: 99px; transition: width 0.8s cubic-bezier(.4,0,.2,1); }
+  .score-bar-avg { margin-top: 0.4rem; font-size: 0.78rem; color: #888; text-align: center; }
+
+  /* Distribution dots */
+  .dist-row { display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.45rem; }
+  .dist-label { font-size: 0.75rem; color: #888; min-width: 130px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dist-bar-track { flex: 1; height: 8px; background: #f0ece4; border-radius: 99px; overflow: hidden; }
+  .dist-bar-fill { height: 100%; border-radius: 99px; transition: width 0.7s cubic-bezier(.4,0,.2,1); }
+  .dist-count { font-size: 0.75rem; font-weight: 500; color: #888; min-width: 28px; text-align: right; }
+
+  /* House ranking tables */
+  .rank-table { width: 100%; border-collapse: collapse; }
+  .rank-table th { font-size: 0.68rem; color: #aaa; text-align: left; padding-bottom: 8px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid #f0ece4; }
+  .rank-table th:not(:first-child) { text-align: right; }
+  .rank-table td { padding: 8px 0; border-bottom: 1px solid #f7f4ef; vertical-align: middle; }
+  .rank-table tr:last-child td { border-bottom: none; }
+  .rank-table td:not(:first-child) { text-align: right; }
+  .rank-pos { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; width: 28px; display: inline-block; }
+  .rank-pos.p1 { color: #d4a843; }
+  .rank-pos.p2 { color: #b0aca6; }
+  .rank-pos.p3 { color: #b08060; }
+  .rank-name { font-size: 0.84rem; font-weight: 500; }
+  .rank-pts { font-size: 0.85rem; font-weight: 500; color: #2c2a24; }
+  .rank-firsts { font-size: 0.8rem; color: #aaa; }
+  .pts-bar { height: 4px; background: #f0ece4; border-radius: 99px; margin-top: 4px; overflow: hidden; }
+  .pts-bar-fill { height: 100%; border-radius: 99px; }
+
+  /* Head to head */
+  .h2h-grid { display: grid; grid-template-columns: 1fr 40px 1fr; gap: 0.5rem; align-items: start; }
+  .h2h-name { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 600; margin-bottom: 0.85rem; line-height: 1.3; }
+  .h2h-name.fl { color: #f5b87a; }
+  .h2h-name.mi { color: #7ac5e0; }
+  .h2h-row { display: flex; justify-content: space-between; align-items: center; padding: 0.3rem 0; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 0.8rem; }
+  .h2h-row:last-child { border-bottom: none; }
+  .h2h-row-label { color: #89b4c9; font-size: 0.7rem; }
+  .h2h-val { font-weight: 500; }
+  .h2h-vs { display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.25); font-size: 0.85rem; padding-top: 2rem; }
+  .val-good { color: #7adbb2; }
+  .val-bad  { color: #f5a07a; }
+  .val-neu  { color: #e8e4dc; }
+
+  /* Comments */
+  .comment-item { padding: 0.65rem 0.85rem; border-left: 2px solid #e8e3da; margin-bottom: 0.6rem; font-size: 0.82rem; color: #555; line-height: 1.6; border-radius: 0 6px 6px 0; background: #faf8f4; }
+
+  /* Response tracker */
+  .tracker-row { display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid #f5f3ef; font-size: 0.82rem; }
+  .tracker-row:last-child { border-bottom: none; }
+  .tracker-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 0.5rem; flex-shrink: 0; }
+  .tracker-dot.voted { background: #7adbb2; }
+  .tracker-dot.pending { background: #e0dbd0; }
+
+  /* Refresh / nav */
+  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 0.75rem; }
+  .nav-link { font-size: 0.8rem; color: #1a5a7a; text-decoration: none; display: flex; align-items: center; gap: 0.35rem; }
+  .nav-link:hover { text-decoration: underline; }
+  .refresh-btn { font-size: 0.78rem; color: #888; background: #fff; border: 1px solid #e8e3da; border-radius: 7px; padding: 0.35rem 0.85rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: border-color 0.15s; }
+  .refresh-btn:hover { border-color: #1a3a4a; color: #1a3a4a; }
+
+  /* Loading / error states */
+  .state-box { text-align: center; padding: 4rem 2rem; color: #aaa; }
+  .state-box .emoji { font-size: 2rem; margin-bottom: 0.75rem; }
+  .state-box p { font-size: 0.88rem; line-height: 1.7; }
+  .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid #e8e3da; border-top-color: #1a3a4a; border-radius: 50%; animation: spin 0.7s linear infinite; margin-right: 0.5rem; vertical-align: middle; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Config notice */
+  .config-notice { background: #fff9f4; border: 1px solid #f5c89a; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.82rem; color: #c45a1a; line-height: 1.6; }
+  .config-notice code { background: #fef0e4; padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: 0.85em; }
+
+  /* Two col layout */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.6rem; }
+    .stat-grid { grid-template-columns: 1fr 1fr 1fr; }
+    .stat-num { font-size: 1.3rem; }
+    .two-col { grid-template-columns: 1fr; }
+    .h2h-grid { grid-template-columns: 1fr; }
+    .h2h-vs { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="top-bar">
+    <a href="index.html" class="nav-link">← Back to poll</a>
+    <button class="refresh-btn" onclick="loadResults()"><span class="spinner" id="refresh-spinner" style="display:none"></span>Refresh results</button>
+  </div>
+
+  <div class="header">
+    <div class="header-eyebrow">Jarrard Family · Biennial Trip 2027</div>
+    <h1>The Verdict</h1>
+    <div class="header-meta" id="header-meta">Loading…</div>
+    <div class="header-divider"></div>
+  </div>
+
+  <div id="config-notice" class="config-notice" style="display:none">
+    ⚙️ <strong>Demo mode:</strong> No Apps Script URL is configured. Replace <code>YOUR_APPS_SCRIPT_URL_HERE</code> in this file with your deployed Web App URL to load real data. Showing sample data below.
+  </div>
+
+  <div id="main-content">
+    <div class="state-box"><div class="emoji">⏳</div><p>Loading results…</p></div>
+  </div>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   CONFIG — must match index.html
+   ══════════════════════════════════════════════════════════ */
+const SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+// House data — kept in sync with index.html for the H2H panel
+const FL_HOUSES = [
+  { name: 'Seven Seas + Sea-La-Vie',    beach: 'Yes (main) / Walk (2nd)', pool: 'Yes / Yes',      beds: '7 + 5', baths: '6 + 4', cost: '~$27,000' },
+  { name: 'Casa Bella Luca + AB Sea',   beach: 'Yes (main) / No (2nd)',   pool: 'Yes / Yes',      beds: '7 + 5', baths: '6 + 5', cost: '~$23,000' },
+  { name: 'Royal Seas + Amethyst',      beach: 'Yes (main) / No (2nd)',   pool: 'Yes / Yes',      beds: '6 + 5', baths: '5 + 4', cost: '~$25,500' },
+];
+const MI_HOUSES = [
+  { name: 'OG Luxury + Feirin de Magnificent', beach: 'Walk (~5 min) / No',  pool: 'Yes / Yes',      beds: '7 + 5', baths: '6 + 4', cost: '~$27,000' },
+  { name: 'Lamb + Victorian Painted Lady',     beach: 'No (~0.5 mi walk)',    pool: 'Yes / No',       beds: '7 + 5', baths: '5 + 4', cost: '~$21,000' },
+  { name: '6-Bed Home + Bridgewater',          beach: 'No (short drive)',     pool: 'Yes / Club only',beds: '6 + 6', baths: '5 + 5', cost: '~$27,000' },
+];
+
+const TOTAL_INVITED = 27; // update to actual family headcount
+
+const SLIDER_LABELS = ['Florida or Die!', 'Leaning Florida', 'Meh, either way', 'Leaning Michigan', 'Michigan or Bust!'];
+
+/* ══════════════════════════════════════════════════════════
+   SAMPLE DATA (shown in demo mode)
+   ══════════════════════════════════════════════════════════ */
+const SAMPLE_RESPONSES = [
+  { fl_rank_1: 'Casa Bella Luca + AB Sea',   fl_rank_2: 'Seven Seas + Sea-La-Vie',    fl_rank_3: 'Royal Seas + Amethyst',         mi_rank_1: 'OG Luxury + Feirin de Magnificent', mi_rank_2: 'Lamb + Victorian Painted Lady', mi_rank_3: '6-Bed Home + Bridgewater', destination_pref: 'Florida or Die!',   destination_score: 1, comment: 'St George is home. I will not be moved.', timestamp: '' },
+  { fl_rank_1: 'Seven Seas + Sea-La-Vie',    fl_rank_2: 'Casa Bella Luca + AB Sea',   fl_rank_3: 'Royal Seas + Amethyst',         mi_rank_1: 'OG Luxury + Feirin de Magnificent', mi_rank_2: '6-Bed Home + Bridgewater',     mi_rank_3: 'Lamb + Victorian Painted Lady', destination_pref: 'Leaning Florida',   destination_score: 2, comment: '', timestamp: '' },
+  { fl_rank_1: 'Royal Seas + Amethyst',      fl_rank_2: 'Seven Seas + Sea-La-Vie',    fl_rank_3: 'Casa Bella Luca + AB Sea',      mi_rank_1: 'Lamb + Victorian Painted Lady',     mi_rank_2: 'OG Luxury + Feirin de Magnificent', mi_rank_3: '6-Bed Home + Bridgewater', destination_pref: 'Meh, either way',   destination_score: 3, comment: 'Open to either, just want a pool.', timestamp: '' },
+  { fl_rank_1: 'Casa Bella Luca + AB Sea',   fl_rank_2: 'Royal Seas + Amethyst',      fl_rank_3: 'Seven Seas + Sea-La-Vie',       mi_rank_1: '6-Bed Home + Bridgewater',          mi_rank_2: 'OG Luxury + Feirin de Magnificent', mi_rank_3: 'Lamb + Victorian Painted Lady', destination_pref: 'Leaning Michigan',  destination_score: 4, comment: '', timestamp: '' },
+  { fl_rank_1: 'Seven Seas + Sea-La-Vie',    fl_rank_2: 'Royal Seas + Amethyst',      fl_rank_3: 'Casa Bella Luca + AB Sea',      mi_rank_1: 'OG Luxury + Feirin de Magnificent', mi_rank_2: 'Lamb + Victorian Painted Lady', mi_rank_3: '6-Bed Home + Bridgewater', destination_pref: 'Florida or Die!',   destination_score: 1, comment: 'The beach situation in Michigan is a dealbreaker for me personally.', timestamp: '' },
+  { fl_rank_1: 'Casa Bella Luca + AB Sea',   fl_rank_2: 'Seven Seas + Sea-La-Vie',    fl_rank_3: 'Royal Seas + Amethyst',         mi_rank_1: 'Lamb + Victorian Painted Lady',     mi_rank_2: '6-Bed Home + Bridgewater',     mi_rank_3: 'OG Luxury + Feirin de Magnificent', destination_pref: 'Michigan or Bust!', destination_score: 5, comment: 'Would love to try somewhere new. Michigan sunsets are unreal.', timestamp: '' },
+];
+
+/* ══════════════════════════════════════════════════════════
+   TALLY LOGIC
+   ══════════════════════════════════════════════════════════ */
+function tally(responses) {
+  const flTally = {}, miTally = {};
+  const scoreDist = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  let scoreSum = 0;
+
+  responses.forEach(r => {
+    // Destination score
+    const s = Number(r.destination_score);
+    if (s >= 1 && s <= 5) { scoreDist[s]++; scoreSum += s; }
+
+    // FL rankings (3pts/#1, 2pts/#2, 1pt/#3)
+    [r.fl_rank_1, r.fl_rank_2, r.fl_rank_3].forEach((name, i) => {
+      if (!name) return;
+      if (!flTally[name]) flTally[name] = { pts: 0, firsts: 0 };
+      flTally[name].pts += (3 - i);
+      if (i === 0) flTally[name].firsts++;
+    });
+
+    // MI rankings
+    [r.mi_rank_1, r.mi_rank_2, r.mi_rank_3].forEach((name, i) => {
+      if (!name) return;
+      if (!miTally[name]) miTally[name] = { pts: 0, firsts: 0 };
+      miTally[name].pts += (3 - i);
+      if (i === 0) miTally[name].firsts++;
+    });
+  });
+
+  const n = responses.length;
+  const avgScore = n ? (scoreSum / n) : 0;
+  const flLeaning = responses.filter(r => r.destination_score <= 2).length;
+  const miLeaning = responses.filter(r => r.destination_score >= 4).length;
+  const meh = n - flLeaning - miLeaning;
+
+  const flSorted = Object.entries(flTally).sort((a, b) => b[1].pts - a[1].pts || b[1].firsts - a[1].firsts);
+  const miSorted = Object.entries(miTally).sort((a, b) => b[1].pts - a[1].pts || b[1].firsts - a[1].firsts);
+
+  const topFL = FL_HOUSES.find(h => h.name === (flSorted[0] && flSorted[0][0])) || FL_HOUSES[0];
+  const topMI = MI_HOUSES.find(h => h.name === (miSorted[0] && miSorted[0][0])) || MI_HOUSES[0];
+
+  // Verdict
+  let verdict, verdictClass;
+  const scorePct = (avgScore - 1) / 4; // 0 = full FL, 1 = full MI
+  if (scorePct < 0.4)       { verdict = 'Florida is winning'; verdictClass = 'fl'; }
+  else if (scorePct > 0.6)  { verdict = 'Michigan is winning'; verdictClass = 'mi'; }
+  else                       { verdict = 'Too close to call'; verdictClass = 'tied'; }
+
+  const comments = responses.filter(r => r.comment && r.comment.trim());
+
+  return { n, avgScore, scoreDist, flLeaning, miLeaning, meh, flSorted, miSorted, topFL, topMI, verdict, verdictClass, comments };
+}
+
+/* ══════════════════════════════════════════════════════════
+   RENDER
+   ══════════════════════════════════════════════════════════ */
+function render(responses, respondentCount, generatedAt) {
+  if (!responses.length) {
+    document.getElementById('main-content').innerHTML = `
+      <div class="state-box"><div class="emoji">🗳️</div><p>No votes yet.<br>Share the poll link and check back soon.</p></div>`;
+    document.getElementById('header-meta').textContent = '0 responses';
+    return;
+  }
+
+  const d = tally(responses);
+  const total = respondentCount || TOTAL_INVITED;
+  const pctVoted = Math.round((d.n / total) * 100);
+  const genStr = generatedAt ? new Date(generatedAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : '';
+
+  document.getElementById('header-meta').textContent =
+    `${d.n} of ~${total} responses · ${pctVoted}% participation${genStr ? ' · Updated ' + genStr : ''}`;
+
+  const maxFlPts = d.flSorted.length ? d.flSorted[0][1].pts : 1;
+  const maxMiPts = d.miSorted.length ? d.miSorted[0][1].pts : 1;
+
+  const scoreBarPct = ((d.avgScore - 1) / 4 * 100).toFixed(1);
+  const scoreBarColor = d.avgScore <= 2 ? '#c45a1a' : d.avgScore >= 4 ? '#1a5a7a' : '#a08060';
+
+  const flPct  = Math.round(d.flLeaning / d.n * 100);
+  const miPct  = Math.round(d.miLeaning / d.n * 100);
+  const mehPct = 100 - flPct - miPct;
+
+  function rankRows(sorted, maxPts, colorClass) {
+    return sorted.map(([name, t], i) => {
+      const pos = ['p1','p2','p3'][i] || '';
+      const barW = Math.round(t.pts / maxPts * 100);
+      const barColor = colorClass === 'fl' ? '#e8963a' : '#3a90c8';
+      return `<tr>
+        <td style="padding-right:0.5rem">
+          <span class="rank-pos ${pos}">${i + 1}</span>
+          <span class="rank-name">${name}</span>
+          <div class="pts-bar"><div class="pts-bar-fill" style="width:${barW}%;background:${barColor}"></div></div>
+        </td>
+        <td class="rank-firsts">${t.firsts} ×&nbsp;#1</td>
+        <td class="rank-pts">${t.pts} pts</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function h2hVal(label, val) {
+    if (label === 'Beachfront') return val.startsWith('Yes') ? 'val-good' : 'val-bad';
+    if (label === 'Pool') return (val.includes('Yes / Yes')) ? 'val-good' : (val.includes('Club') || val === 'Yes / No') ? 'val-bad' : 'val-neu';
+    return 'val-neu';
+  }
+  const h2hRows = [
+    { label: 'Cost',      fl: d.topFL.cost,  mi: d.topMI.cost },
+    { label: 'Beachfront',fl: d.topFL.beach, mi: d.topMI.beach },
+    { label: 'Pool',      fl: d.topFL.pool,  mi: d.topMI.pool },
+    { label: 'Bedrooms',  fl: d.topFL.beds,  mi: d.topMI.beds },
+    { label: 'Bathrooms', fl: d.topFL.baths, mi: d.topMI.baths },
+  ];
+
+  const commentsHTML = d.comments.length
+    ? d.comments.map(r => `<div class="comment-item">${escapeHTML(r.comment)}</div>`).join('')
+    : `<div style="color:#bbb;font-size:0.82rem;font-style:italic">No comments yet.</div>`;
+
+  const distRows = SLIDER_LABELS.map((lbl, i) => {
+    const count = d.scoreDist[i + 1] || 0;
+    const pct = d.n ? Math.round(count / d.n * 100) : 0;
+    const isFL = i <= 1, isMI = i >= 3;
+    const color = isFL ? '#c45a1a' : isMI ? '#1a5a7a' : '#a08060';
+    return `<div class="dist-row">
+      <div class="dist-label">${lbl}</div>
+      <div class="dist-bar-track"><div class="dist-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+      <div class="dist-count">${count}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('main-content').innerHTML = `
+
+    <!-- Verdict -->
+    <div class="section-header"><span class="section-icon">🏆</span><span class="section-title">Destination verdict</span></div>
+    <div class="panel">
+      <div class="verdict-badge ${d.verdictClass}">${d.verdict}</div>
+      <div class="verdict-title">
+        ${d.verdictClass === 'fl' ? '🌴 Florida is ahead' : d.verdictClass === 'mi' ? '🌲 Michigan is ahead' : '⚖️ It\'s neck and neck'}
+      </div>
+      <div class="verdict-sub" style="margin-bottom:1.25rem">Average preference score: <strong>${d.avgScore.toFixed(1)}</strong> / 5 &nbsp;(1 = Florida or Die, 5 = Michigan or Bust)</div>
+      <div class="stat-grid">
+        <div class="stat-card fl">
+          <div class="stat-num">${flPct}%</div>
+          <div class="stat-label">Florida-leaning</div>
+        </div>
+        <div class="stat-card neu">
+          <div class="stat-num">${mehPct}%</div>
+          <div class="stat-label">Either way</div>
+        </div>
+        <div class="stat-card mi">
+          <div class="stat-num">${miPct}%</div>
+          <div class="stat-label">Michigan-leaning</div>
+        </div>
+      </div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-labels"><span>Florida or Die</span><span>Michigan or Bust</span></div>
+        <div class="score-bar-track">
+          <div class="score-bar-fill" style="width:${scoreBarPct}%;background:${scoreBarColor}"></div>
+        </div>
+        <div class="score-bar-avg">Needle sits at ${d.avgScore.toFixed(1)} / 5</div>
+      </div>
+    </div>
+
+    <!-- Score distribution -->
+    <div class="section-header"><span class="section-icon">📊</span><span class="section-title">Preference breakdown</span></div>
+    <div class="panel">${distRows}</div>
+
+    <!-- House rankings -->
+    <div class="section-header"><span class="section-icon">🏠</span><span class="section-title">House rankings</span></div>
+    <div class="two-col">
+      <div class="panel">
+        <div style="font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#c45a1a;margin-bottom:1rem">🌊 Florida</div>
+        <table class="rank-table">
+          <tr><th>Option</th><th>#1 picks</th><th>Points</th></tr>
+          ${rankRows(d.flSorted, maxFlPts, 'fl')}
+        </table>
+        <div style="font-size:0.7rem;color:#ccc;margin-top:0.75rem">Points: 3 for #1 pick · 2 for #2 · 1 for #3</div>
+      </div>
+      <div class="panel">
+        <div style="font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#1a5a7a;margin-bottom:1rem">🌲 Michigan</div>
+        <table class="rank-table">
+          <tr><th>Option</th><th>#1 picks</th><th>Points</th></tr>
+          ${rankRows(d.miSorted, maxMiPts, 'mi')}
+        </table>
+        <div style="font-size:0.7rem;color:#ccc;margin-top:0.75rem">Points: 3 for #1 pick · 2 for #2 · 1 for #3</div>
+      </div>
+    </div>
+
+    <!-- Head to head -->
+    <div class="section-header"><span class="section-icon">⚔️</span><span class="section-title">Top pick head-to-head</span></div>
+    <div class="panel-dark">
+      <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:#89b4c9;text-align:center;margin-bottom:1.25rem">Most popular Florida option vs Most popular Michigan option</div>
+      <div class="h2h-grid">
+        <div>
+          <div class="h2h-name fl">${d.topFL.name}</div>
+          ${h2hRows.map(r => `<div class="h2h-row"><span class="h2h-row-label">${r.label}</span><span class="h2h-val ${h2hVal(r.label, r.fl)}">${r.fl}</span></div>`).join('')}
+        </div>
+        <div class="h2h-vs">vs</div>
+        <div>
+          <div class="h2h-name mi">${d.topMI.name}</div>
+          ${h2hRows.map(r => `<div class="h2h-row"><span class="h2h-row-label">${r.label}</span><span class="h2h-val ${h2hVal(r.label, r.mi)}">${r.mi}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- Comments -->
+    <div class="section-header"><span class="section-icon">💬</span><span class="section-title">Anonymous comments</span></div>
+    <div class="panel">${commentsHTML}</div>
+
+    <!-- Response tracker -->
+    <div class="section-header"><span class="section-icon">👥</span><span class="section-title">Response tracker</span></div>
+    <div class="panel">
+      <div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:1rem;flex-wrap:wrap">
+        <div style="font-size:1.6rem;font-weight:600;color:#1a3a4a">${d.n}<span style="font-size:1rem;color:#aaa;font-weight:400"> / ~${total}</span></div>
+        <div>
+          <div style="font-size:0.82rem;color:#2c2a24;font-weight:500">${pctVoted}% participation</div>
+          <div style="font-size:0.75rem;color:#aaa">${total - d.n} family member(s) haven't voted yet</div>
+        </div>
+      </div>
+      <div style="background:#f5f3ef;border-radius:99px;height:8px;overflow:hidden;margin-bottom:0.5rem">
+        <div style="height:100%;width:${pctVoted}%;background:#1a3a4a;border-radius:99px;transition:width 0.8s cubic-bezier(.4,0,.2,1)"></div>
+      </div>
+      <div style="font-size:0.72rem;color:#bbb;text-align:center">${total - d.n} pending · emails visible only in the Respondents sheet</div>
+    </div>
+  `;
+}
+
+/* ══════════════════════════════════════════════════════════
+   FETCH
+   ══════════════════════════════════════════════════════════ */
+async function loadResults() {
+  document.getElementById('refresh-spinner').style.display = 'inline-block';
+
+  if (SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    document.getElementById('config-notice').style.display = 'block';
+    await new Promise(r => setTimeout(r, 400));
+    document.getElementById('refresh-spinner').style.display = 'none';
+    render(SAMPLE_RESPONSES, TOTAL_INVITED, new Date().toISOString());
+    return;
+  }
+
+  try {
+    const resp = await fetch(`${SCRIPT_URL}?action=results`);
+    const data = await resp.json();
+    document.getElementById('refresh-spinner').style.display = 'none';
+    if (data.status === 'empty') {
+      render([], 0, null);
+    } else if (data.status === 'ok') {
+      render(data.responses, data.respondentCount, data.generatedAt);
+    } else {
+      throw new Error(data.message || 'Unknown error');
+    }
+  } catch (err) {
+    document.getElementById('refresh-spinner').style.display = 'none';
+    document.getElementById('main-content').innerHTML = `
+      <div class="state-box">
+        <div class="emoji">⚠️</div>
+        <p>Couldn't load results.<br><small style="color:#c45a1a">${escapeHTML(err.message)}</small><br><br>
+        <button class="refresh-btn" onclick="loadResults()">Try again</button></p>
+      </div>`;
+  }
+}
+
+function escapeHTML(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+loadResults();
+</script>
+</body>
+</html>
