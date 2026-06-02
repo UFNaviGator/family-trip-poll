@@ -316,6 +316,7 @@
   <!-- ── SUBMIT ── -->
   <button class="submit-btn" id="submit-btn" onclick="submitVote()">Submit My Vote</button>
   <div class="status-msg" id="status-msg"></div>
+  <div id="results-panel" style="display:none"></div>
 
 </div><!-- /app -->
 
@@ -679,8 +680,15 @@ async function submitVote() {
 
   if (SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
     await new Promise(r => setTimeout(r, 700));
-    showStatus('✓ Demo mode — vote recorded locally. Wire up the Apps Script URL to go live.', 'success');
-    btn.textContent = 'Vote Submitted ✓';
+    const existing = localResponses.findIndex(r => r.email === payload.email);
+    if (existing >= 0) localResponses[existing] = payload;
+    else localResponses.push(payload);
+    const el = document.getElementById('status-msg');
+    el.className = 'status-msg success';
+    el.style.display = 'block';
+    el.innerHTML = `✓ Demo mode — ${localResponses.length} response(s) stored in memory. <a href="#" onclick="toggleResults();return false;" style="color:inherit;font-weight:500;text-decoration:underline">View results ↓</a>`;
+    btn.textContent = localResponses.length > 1 ? 'Vote Updated ✓' : 'Vote Submitted ✓';
+    renderResults();
     return;
   }
 
@@ -710,6 +718,104 @@ function showStatus(msg, type) {
   el.textContent = msg;
   el.className = 'status-msg ' + type;
   el.style.display = 'block';
+}
+
+/* ══════════════════════════════════════════════════════════
+   LOCAL DEMO RESULTS
+   ══════════════════════════════════════════════════════════ */
+const localResponses = [];
+let resultsVisible = false;
+
+function toggleResults() {
+  resultsVisible = !resultsVisible;
+  const el = document.getElementById('results-panel');
+  el.style.display = resultsVisible ? 'block' : 'none';
+  if (resultsVisible) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderResults() {
+  const panel = document.getElementById('results-panel');
+  if (!localResponses.length) { panel.innerHTML = ''; return; }
+
+  // Tally destination scores
+  const scoreMap = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  const flTally = {}; const miTally = {};
+  localResponses.forEach(r => {
+    scoreMap[r.destination_score] = (scoreMap[r.destination_score] || 0) + 1;
+    [r.fl_rank_1, r.fl_rank_2, r.fl_rank_3].forEach((name, i) => {
+      if (!flTally[name]) flTally[name] = { pts: 0, firsts: 0 };
+      flTally[name].pts += (3 - i);
+      if (i === 0) flTally[name].firsts++;
+    });
+    [r.mi_rank_1, r.mi_rank_2, r.mi_rank_3].forEach((name, i) => {
+      if (!miTally[name]) miTally[name] = { pts: 0, firsts: 0 };
+      miTally[name].pts += (3 - i);
+      if (i === 0) miTally[name].firsts++;
+    });
+  });
+
+  const avgScore = (localResponses.reduce((s, r) => s + r.destination_score, 0) / localResponses.length).toFixed(1);
+  const flPct = Math.round(localResponses.filter(r => r.destination_score <= 2).length / localResponses.length * 100);
+  const miPct = Math.round(localResponses.filter(r => r.destination_score >= 4).length / localResponses.length * 100);
+  const mehPct = 100 - flPct - miPct;
+
+  const rankRow = (name, t) =>
+    `<tr><td style="padding:4px 0;font-size:0.8rem;color:#2c2a24">${name}</td>
+     <td style="padding:4px 8px;text-align:center;font-size:0.8rem;font-weight:500">${t.firsts}</td>
+     <td style="padding:4px 0;text-align:right;font-size:0.8rem;font-weight:500">${t.pts}</td></tr>`;
+
+  const flSorted = Object.entries(flTally).sort((a,b) => b[1].pts - a[1].pts);
+  const miSorted = Object.entries(miTally).sort((a,b) => b[1].pts - a[1].pts);
+
+  const comments = localResponses.filter(r => r.comment).map(r =>
+    `<div style="padding:0.5rem 0.75rem;border-left:2px solid #e8e3da;margin-bottom:0.5rem;font-size:0.8rem;color:#555;line-height:1.5">${r.comment}</div>`
+  ).join('');
+
+  panel.innerHTML = `
+    <div style="margin-top:2rem">
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+        <div style="width:26px;height:26px;border-radius:50%;background:#1a3a4a;color:#fff;font-size:0.72rem;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">★</div>
+        <div style="font-size:0.72rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#888">Demo results — ${localResponses.length} response(s)</div>
+      </div>
+      <div style="background:#fff;border:1px solid #e8e3da;border-radius:14px;padding:1.5rem;margin-bottom:1rem">
+        <div style="font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#aaa;margin-bottom:1rem">Destination preference</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;margin-bottom:1rem">
+          <div style="background:#fef0e4;border-radius:10px;padding:0.75rem;text-align:center">
+            <div style="font-size:1.4rem;font-weight:600;color:#c45a1a">${flPct}%</div>
+            <div style="font-size:0.72rem;color:#c45a1a;margin-top:2px">Florida-leaning</div>
+          </div>
+          <div style="background:#f5f3ef;border-radius:10px;padding:0.75rem;text-align:center">
+            <div style="font-size:1.4rem;font-weight:600;color:#888">${mehPct}%</div>
+            <div style="font-size:0.72rem;color:#aaa;margin-top:2px">Either way</div>
+          </div>
+          <div style="background:#e4f0f8;border-radius:10px;padding:0.75rem;text-align:center">
+            <div style="font-size:1.4rem;font-weight:600;color:#1a5a7a">${miPct}%</div>
+            <div style="font-size:0.72rem;color:#1a5a7a;margin-top:2px">Michigan-leaning</div>
+          </div>
+        </div>
+        <div style="font-size:0.8rem;color:#888;text-align:center">Average score: <strong style="color:#2c2a24">${avgScore}</strong> / 5 &nbsp;(1 = Florida or Die, 5 = Michigan or Bust)</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+        <div style="background:#fff;border:1px solid #e8e3da;border-radius:14px;padding:1.25rem">
+          <div style="font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#c45a1a;margin-bottom:0.75rem">🌊 Florida rankings</div>
+          <table style="width:100%;border-collapse:collapse">
+            <tr><th style="font-size:0.68rem;color:#aaa;text-align:left;padding-bottom:6px">Option</th><th style="font-size:0.68rem;color:#aaa;text-align:center;padding-bottom:6px">#1 picks</th><th style="font-size:0.68rem;color:#aaa;text-align:right;padding-bottom:6px">Points</th></tr>
+            ${flSorted.map(([name, t]) => rankRow(name, t)).join('')}
+          </table>
+        </div>
+        <div style="background:#fff;border:1px solid #e8e3da;border-radius:14px;padding:1.25rem">
+          <div style="font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#1a5a7a;margin-bottom:0.75rem">🌲 Michigan rankings</div>
+          <table style="width:100%;border-collapse:collapse">
+            <tr><th style="font-size:0.68rem;color:#aaa;text-align:left;padding-bottom:6px">Option</th><th style="font-size:0.68rem;color:#aaa;text-align:center;padding-bottom:6px">#1 picks</th><th style="font-size:0.68rem;color:#aaa;text-align:right;padding-bottom:6px">Points</th></tr>
+            ${miSorted.map(([name, t]) => rankRow(name, t)).join('')}
+          </table>
+        </div>
+      </div>
+      ${comments ? `<div style="background:#fff;border:1px solid #e8e3da;border-radius:14px;padding:1.25rem">
+        <div style="font-size:0.72rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#aaa;margin-bottom:0.75rem">Anonymous comments</div>
+        ${comments}
+      </div>` : ''}
+    </div>`;
 }
 
 /* ══════════════════════════════════════════════════════════
