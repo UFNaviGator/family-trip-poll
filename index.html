@@ -112,7 +112,13 @@
   .rank-content { flex: 1; min-width: 0; }
   .rank-name { font-size: 0.84rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .rank-sub { font-size: 0.72rem; color: #999; margin-top: 1px; }
-  .rank-handle { color: #d0c8be; font-size: 1rem; cursor: grab; flex-shrink: 0; }
+  .rank-handle { color: #d0c8be; font-size: 1rem; cursor: grab; flex-shrink: 0; touch-action: none; }
+  .rank-item { touch-action: manipulation; }
+  .rank-item.touch-dragging {
+    opacity: 0.45; border-style: dashed;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+  .rank-item.touch-target { border-color: #1a3a4a; background: #f0f5f8; }
 
   /* ── Detail panel ────────────────────────────────────────── */
   .detail-empty { text-align: center; color: #ccc; font-size: 0.875rem; padding: 2.5rem 0; font-style: italic; }
@@ -438,7 +444,12 @@ function renderList(listId, houses, order, dest) {
         <div class="rank-sub">${h.beds} beds · ${h.cost}</div>
       </div>
       <span class="rank-handle">⠿</span>`;
-    div.addEventListener('click', () => showDetail(h));
+
+    // ── Mouse click (detail view) ────────────────────────────
+    let touchMoved = false;
+    div.addEventListener('click', () => { if (!touchMoved) showDetail(h); });
+
+    // ── Mouse drag ───────────────────────────────────────────
     div.addEventListener('dragstart', e => {
       dragSrc = { dest, idx };
       div.classList.add('dragging');
@@ -461,8 +472,79 @@ function renderList(listId, houses, order, dest) {
       arr.splice(toPos, 0, moved);
       renderLists();
     });
+
+    // ── Touch drag ───────────────────────────────────────────
+    // Track the item being dragged and a floating ghost clone
+    let touchGhost = null;
+    let touchOffsetX = 0, touchOffsetY = 0;
+
+    div.addEventListener('touchstart', e => {
+      touchMoved = false;
+      const touch = e.touches[0];
+      const rect = div.getBoundingClientRect();
+      touchOffsetX = touch.clientX - rect.left;
+      touchOffsetY = touch.clientY - rect.top;
+      dragSrc = { dest, idx };
+
+      // Create a visual ghost that follows the finger
+      touchGhost = div.cloneNode(true);
+      touchGhost.style.cssText = `
+        position: fixed; z-index: 9999; pointer-events: none;
+        width: ${rect.width}px; opacity: 0.85;
+        left: ${touch.clientX - touchOffsetX}px;
+        top:  ${touch.clientY - touchOffsetY}px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+        border-radius: 10px; background: #fff;
+        border: 1px solid #1a3a4a;
+      `;
+      document.body.appendChild(touchGhost);
+      div.classList.add('touch-dragging');
+    }, { passive: true });
+
+    div.addEventListener('touchmove', e => {
+      e.preventDefault(); // stop page scroll while dragging
+      touchMoved = true;
+      const touch = e.touches[0];
+
+      // Move ghost
+      if (touchGhost) {
+        touchGhost.style.left = `${touch.clientX - touchOffsetX}px`;
+        touchGhost.style.top  = `${touch.clientY - touchOffsetY}px`;
+      }
+
+      // Highlight the item under the finger
+      document.querySelectorAll('.rank-item').forEach(x => x.classList.remove('touch-target'));
+      const target = touchTargetAt(touch.clientX, touch.clientY, div);
+      if (target) target.classList.add('touch-target');
+    }, { passive: false });
+
+    div.addEventListener('touchend', e => {
+      div.classList.remove('touch-dragging');
+      if (touchGhost) { touchGhost.remove(); touchGhost = null; }
+      document.querySelectorAll('.rank-item').forEach(x => x.classList.remove('touch-target'));
+
+      if (!touchMoved || !dragSrc) return;
+      const touch = e.changedTouches[0];
+      const target = touchTargetAt(touch.clientX, touch.clientY, div);
+      if (!target || target.dataset.dest !== dest) return;
+
+      const arr = dest === 'fl' ? flOrder : miOrder;
+      const fromPos = arr.indexOf(dragSrc.idx);
+      const toPos   = arr.indexOf(parseInt(target.dataset.idx));
+      if (fromPos === toPos) return;
+      const [moved] = arr.splice(fromPos, 1);
+      arr.splice(toPos, 0, moved);
+      renderLists();
+    }, { passive: true });
+
     el.appendChild(div);
   });
+}
+
+// Return the rank-item element under a touch point, excluding the dragging item
+function touchTargetAt(x, y, exclude) {
+  const els = document.elementsFromPoint(x, y);
+  return els.find(el => el.classList.contains('rank-item') && el !== exclude) || null;
 }
 
 function photoHTML(id, side) {
