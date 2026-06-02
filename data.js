@@ -47,7 +47,7 @@ const FL_HOUSES = [
     caveat: 'Secondary house is not beachfront — short walk to beach access. Both houses have pools.',
     // Photos
     photoA:  'https://img.trackhs.com/1200x/https://track-pm.s3.amazonaws.com/capeandcoast/image/06132b40-4c32-4fac-a483-bc225170b6d7',   // e.g. "images/fl1-a.jpg" or a full URL
-    photoB:  'images/sealavie.jpg',
+    photoB:  'images/sealavie.png',
     labelA: 'Seven Seas',
     labelB: 'Sea-La-Vie',
     // Listing links
