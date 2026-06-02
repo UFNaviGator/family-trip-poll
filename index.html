@@ -158,6 +158,23 @@
   }
   .detail-caveat.fl { background: #fff9f4; color: #c45a1a; border-color: #e8963a; }
   .detail-caveat.mi { background: #f0f7fb; color: #1a5a7a; border-color: #5aA0c8; }
+  .detail-links { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.85rem; }
+  .listing-link {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    font-size: 0.78rem; font-weight: 500; padding: 0.4rem 0.9rem;
+    border-radius: 7px; text-decoration: none; transition: opacity 0.15s;
+  }
+  .listing-link:hover { opacity: 0.8; }
+  .listing-link.fl { background: #fef0e4; color: #c45a1a; border: 1px solid #f5c89a; }
+  .listing-link.mi { background: #e4f0f8; color: #1a5a7a; border: 1px solid #9acde8; }
+  .detail-photo-link { display: block; text-decoration: none; position: relative; }
+  .detail-photo-link-badge {
+    position: absolute; top: 0.5rem; right: 0.5rem;
+    background: rgba(0,0,0,0.55); color: #fff;
+    font-size: 0.68rem; padding: 3px 8px; border-radius: 4px;
+    opacity: 0; transition: opacity 0.15s;
+  }
+  .detail-photo-link:hover .detail-photo-link-badge { opacity: 1; }
 
   /* ── Compare panel ───────────────────────────────────────── */
   .compare-header {
@@ -320,94 +337,14 @@
 
 </div><!-- /app -->
 
+<script src="data.js"></script>
 <script>
 /* ══════════════════════════════════════════════════════════
-   CONFIG — edit this section to update house data & photos
-   ══════════════════════════════════════════════════════════
-
-   PHOTOS: each option has { a, b } for the two houses.
-   Use either:
-     - a relative path:  "images/fl1-a.jpg"  (file in /images/ folder in repo)
-     - a full URL:       "https://example.com/photo.jpg"
-     - null:             placeholder is shown
+   CONFIG — house data lives in data.js, only edit this for
+   the Apps Script URL
    ══════════════════════════════════════════════════════════ */
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEK33lFzwcI_osRT4uZ1zBUMnVmn-BkNqoGpSslNzrPFsWzIf8mvIBPapYSeB7gZoHsA/exec';
-
-const PHOTOS = {
-  fl1: { a: null, b: null, labelA: 'Seven Seas', labelB: 'Sea-La-Vie' },
-  fl2: { a: null, b: null, labelA: 'Casa Bella Luca', labelB: 'AB Sea' },
-  fl3: { a: null, b: null, labelA: 'Royal Seas', labelB: 'Amethyst' },
-  mi1: { a: null, b: null, labelA: 'OG Luxury', labelB: 'Feirin de Magnificent' },
-  mi2: { a: null, b: null, labelA: 'Lamb', labelB: 'Victorian Painted Lady' },
-  mi3: { a: null, b: null, labelA: '6-Bed Home', labelB: 'Bridgewater' },
-};
-
-const FL_HOUSES = [
-  {
-    id: 'fl1', dest: 'fl',
-    name: 'Seven Seas + Sea-La-Vie',
-    beds: '7 + 5', baths: '6 + 4',
-    beach: 'Yes (main) / Walk (2nd)',
-    pool: 'Yes / Yes',
-    cost: '~$27,000',
-    extras: ['Wrap-around balcony', 'Splash pad for the kids', 'Double fridge & outdoor grill', 'Pool table in garage', 'Multiple covered sitting areas'],
-    caveat: 'Secondary house is not beachfront — short walk to beach access. Both houses have pools.'
-  },
-  {
-    id: 'fl2', dest: 'fl',
-    name: 'Casa Bella Luca + AB Sea',
-    beds: '7 + 5', baths: '6 + 5',
-    beach: 'Yes (main) / No (2nd)',
-    pool: 'Yes / Yes',
-    cost: '~$23,000',
-    extras: ['Top deck with panoramic gulf views', 'Hot tub at AB Sea', 'We know this house — the "Cartel house"', 'Double fridge, large outdoor dining', 'Walking distance between houses'],
-    caveat: 'AB Sea is pool-only, no beach access. Walking distance to main house. Most budget-friendly FL option.'
-  },
-  {
-    id: 'fl3', dest: 'fl',
-    name: 'Royal Seas + Amethyst',
-    beds: '6 + 5', baths: '5 + 4',
-    beach: 'Yes (main) / No (2nd)',
-    pool: 'Yes / Yes',
-    cost: '~$25,500',
-    extras: ['Theater room', 'Game room with arcade', 'Private boardwalk to beach', 'Large covered lanai & fire pit', 'Hot tub on main house deck'],
-    caveat: 'Amethyst is the smaller house — tighter quarters for larger family units. Royal Seas has the best amenities of any FL option.'
-  },
-];
-
-const MI_HOUSES = [
-  {
-    id: 'mi1', dest: 'mi',
-    name: 'OG Luxury + Feirin de Magnificent',
-    beds: '7 + 5', baths: '6 + 4',
-    beach: 'Walk (~5 min) / No',
-    pool: 'Yes / Yes',
-    cost: '~$27,000',
-    extras: ['Both houses have private pools', 'High-end finishes throughout', 'Fire pit, kayaks, lake gear included', 'Closest Michigan option to the water', 'Great restaurant & brewery scene nearby'],
-    caveat: '⚠️ Neither house is directly on the beach. ~5 min walk to public lake access. No private beachfront at either property.'
-  },
-  {
-    id: 'mi2', dest: 'mi',
-    name: 'Lamb + Victorian Painted Lady',
-    beds: '7 + 5', baths: '5 + 4',
-    beach: 'No (~0.5 mi walk)',
-    pool: 'Yes / No',
-    cost: '~$21,000',
-    extras: ['Most affordable Michigan option', 'Victorian house has incredible character', 'Large wraparound porch', 'Only 4 houses apart', 'Good access to South Haven dining'],
-    caveat: '⚠️ No beach access from either house — 0.5 mile walk to the lake. Only the main house has a pool. Victorian Painted Lady has no pool.'
-  },
-  {
-    id: 'mi3', dest: 'mi',
-    name: '6-Bed Home + Bridgewater',
-    beds: '6 + 6', baths: '5 + 5',
-    beach: 'No (short drive)',
-    pool: 'Yes / Club only',
-    cost: '~$27,000',
-    extras: ['Most total rooms of any Michigan option', 'Tennis court on property', 'Club pool access at Bridgewater', 'Putt-putt & playground on site', 'Great for splitting into sub-families'],
-    caveat: '⚠️ Beach requires a short drive — not walkable. Bridgewater has club pool access only, not private. Best Michigan option for space.'
-  },
-];
+const SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
 
 /* ══════════════════════════════════════════════════════════
    STATE
@@ -548,33 +485,37 @@ function touchTargetAt(x, y, exclude) {
   return els.find(el => el.classList.contains('rank-item') && el !== exclude) || null;
 }
 
-function photoHTML(id, side) {
-  const p = PHOTOS[id];
-  const src = side === 'a' ? p.a : p.b;
-  const label = side === 'a' ? p.labelA : p.labelB;
-  if (!src) {
-    return `<div class="detail-photo">
-      <div class="detail-photo-placeholder">
-        <span style="font-size:1.5rem">🏠</span>
-        <span>${label}</span>
-        <span style="font-size:0.65rem;color:#c8c0b4">Photo coming soon</span>
-      </div>
-    </div>`;
+function photoHTML(h, side) {
+  const src   = side === 'a' ? h.photoA  : h.photoB;
+  const label = side === 'a' ? h.labelA  : h.labelB;
+  const link  = side === 'a' ? h.linkA   : h.linkB;
+  const inner = src
+    ? `<img src="${src}" alt="${label}" loading="lazy" onerror="this.parentElement.querySelector('.detail-photo-label').style.display='block';this.style.display='none'">
+       <div class="detail-photo-label">${label}</div>`
+    : `<div class="detail-photo-placeholder">
+         <span style="font-size:1.5rem">🏠</span>
+         <span>${label}</span>
+         <span style="font-size:0.65rem;color:#c8c0b4">Photo coming soon</span>
+       </div>`;
+  if (link) {
+    return `<a href="${link}" target="_blank" rel="noopener" class="detail-photo detail-photo-link" title="View listing for ${label}">${inner}<div class="detail-photo-link-badge">View listing ↗</div></a>`;
   }
-  return `<div class="detail-photo">
-    <img src="${src}" alt="${label}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'detail-photo-placeholder\\'><span>🏠</span><span>${label}</span></div>'">
-    <div class="detail-photo-label">${label}</div>
-  </div>`;
+  return `<div class="detail-photo">${inner}</div>`;
 }
 
 function showDetail(h) {
   selectedId = h.id;
   const dest = h.dest;
+  const linksHTML = [
+    h.linkA ? `<a href="${h.linkA}" target="_blank" rel="noopener" class="listing-link ${dest}">${h.labelA} listing ↗</a>` : '',
+    h.linkB ? `<a href="${h.linkB}" target="_blank" rel="noopener" class="listing-link ${dest}">${h.labelB} listing ↗</a>` : '',
+  ].filter(Boolean).join('');
+
   document.getElementById('detail-panel').innerHTML = `
     <div class="detail-name">${h.name}</div>
     <div class="detail-photos">
-      ${photoHTML(h.id, 'a')}
-      ${photoHTML(h.id, 'b')}
+      ${photoHTML(h, 'a')}
+      ${photoHTML(h, 'b')}
     </div>
     <div class="detail-stats">
       <div class="detail-stat"><div class="detail-stat-label">Total Cost</div><div class="detail-stat-value">${h.cost}</div></div>
@@ -584,7 +525,8 @@ function showDetail(h) {
       <div class="detail-stat"><div class="detail-stat-label">Pool</div><div class="detail-stat-value">${h.pool}</div></div>
     </div>
     <div class="detail-tags">${h.extras.map(x => `<span class="detail-tag ${dest}">${x}</span>`).join('')}</div>
-    <div class="detail-caveat ${dest}">${h.caveat}</div>`;
+    <div class="detail-caveat ${dest}">${h.caveat}</div>
+    ${linksHTML ? `<div class="detail-links">${linksHTML}</div>` : ''}`;
   renderLists();
 }
 

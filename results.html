@@ -165,25 +165,12 @@
 
 </div>
 
+<script src="data.js"></script>
 <script>
 /* ══════════════════════════════════════════════════════════
-   CONFIG — must match index.html
+   CONFIG — house data lives in data.js
    ══════════════════════════════════════════════════════════ */
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyEK33lFzwcI_osRT4uZ1zBUMnVmn-BkNqoGpSslNzrPFsWzIf8mvIBPapYSeB7gZoHsA/exec';
-
-// House data — kept in sync with index.html for the H2H panel
-const FL_HOUSES = [
-  { name: 'Seven Seas + Sea-La-Vie',    beach: 'Yes (main) / Walk (2nd)', pool: 'Yes / Yes',      beds: '7 + 5', baths: '6 + 4', cost: '~$27,000' },
-  { name: 'Casa Bella Luca + AB Sea',   beach: 'Yes (main) / No (2nd)',   pool: 'Yes / Yes',      beds: '7 + 5', baths: '6 + 5', cost: '~$23,000' },
-  { name: 'Royal Seas + Amethyst',      beach: 'Yes (main) / No (2nd)',   pool: 'Yes / Yes',      beds: '6 + 5', baths: '5 + 4', cost: '~$25,500' },
-];
-const MI_HOUSES = [
-  { name: 'OG Luxury + Feirin de Magnificent', beach: 'Walk (~5 min) / No',  pool: 'Yes / Yes',      beds: '7 + 5', baths: '6 + 4', cost: '~$27,000' },
-  { name: 'Lamb + Victorian Painted Lady',     beach: 'No (~0.5 mi walk)',    pool: 'Yes / No',       beds: '7 + 5', baths: '5 + 4', cost: '~$21,000' },
-  { name: '6-Bed Home + Bridgewater',          beach: 'No (short drive)',     pool: 'Yes / Club only',beds: '6 + 6', baths: '5 + 5', cost: '~$27,000' },
-];
-
-const TOTAL_INVITED = 27; // update to actual family headcount
+const SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
 
 const SLIDER_LABELS = ['Florida or Die!', 'Leaning Florida', 'Meh, either way', 'Leaning Michigan', 'Michigan or Bust!'];
 
