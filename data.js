@@ -46,13 +46,13 @@ const FL_HOUSES = [
     ],
     caveat: 'Secondary house is not beachfront — short walk to beach access. Both houses have pools.',
     // Photos
-    photoA:  null,   // e.g. "images/fl1-a.jpg" or a full URL
-    photoB:  null,
+    photoA:  'https://img.trackhs.com/1200x/https://track-pm.s3.amazonaws.com/capeandcoast/image/06132b40-4c32-4fac-a483-bc225170b6d7',   // e.g. "images/fl1-a.jpg" or a full URL
+    photoB:  'images/sea-la-vie.jpg',
     labelA: 'Seven Seas',
     labelB: 'Sea-La-Vie',
     // Listing links
     linkA:  'https://www.capeandcoast.com/rentals/seven-seas',
-    linkB:  null,    // add Sea-La-Vie link when available
+    linkB:  'https://www.collinsvacationrentals.com/rentals/sea-la-vie',    // add Sea-La-Vie link when available
   },
   {
     id: 'fl2',
