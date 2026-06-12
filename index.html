@@ -379,7 +379,7 @@ function renderList(listId, houses, order, dest) {
       <span class="rank-num">${rank + 1}</span>
       <div class="rank-content">
         <div class="rank-name">${h.name}</div>
-        <div class="rank-sub">${h.beds} beds · ${h.cost}</div>
+        <div class="rank-sub">${shortBedBath(h)} · ${h.cost}</div>
       </div>
       <span class="rank-handle">⠿</span>`;
 
@@ -519,8 +519,8 @@ function showDetail(h) {
     </div>
     <div class="detail-stats">
       <div class="detail-stat"><div class="detail-stat-label">Total Cost</div><div class="detail-stat-value">${h.cost}</div></div>
-      <div class="detail-stat"><div class="detail-stat-label">Bedrooms</div><div class="detail-stat-value">${h.beds}</div></div>
-      <div class="detail-stat"><div class="detail-stat-label">Bathrooms</div><div class="detail-stat-value">${h.baths}</div></div>
+      <div class="detail-stat"><div class="detail-stat-label">Bedrooms</div><div class="detail-stat-value">${bedBreakdown(h)}</div></div>
+      <div class="detail-stat"><div class="detail-stat-label">Bathrooms</div><div class="detail-stat-value">${bathBreakdown(h)}</div></div>
       <div class="detail-stat"><div class="detail-stat-label">Beachfront</div><div class="detail-stat-value">${h.beach}</div></div>
       <div class="detail-stat"><div class="detail-stat-label">Pool</div><div class="detail-stat-value">${h.pool}</div></div>
     </div>
@@ -537,8 +537,8 @@ function updateCompare() {
     { label: 'Cost',       flv: fl.cost,  miv: mi.cost },
     { label: 'Beachfront', flv: fl.beach, miv: mi.beach },
     { label: 'Pool',       flv: fl.pool,  miv: mi.pool },
-    { label: 'Bedrooms',   flv: fl.beds,  miv: mi.beds },
-    { label: 'Bathrooms',  flv: fl.baths, miv: mi.baths },
+    { label: 'Bedrooms',   flv: totalBeds(fl) + ' total',  miv: totalBeds(mi) + ' total' },
+    { label: 'Bathrooms',  flv: totalBathsLabel(fl), miv: totalBathsLabel(mi) },
   ];
 
   function cls(label, val) {

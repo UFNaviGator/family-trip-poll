@@ -295,8 +295,8 @@ function render(responses, respondentCount, generatedAt) {
     { label: 'Cost',      fl: d.topFL.cost,  mi: d.topMI.cost },
     { label: 'Beachfront',fl: d.topFL.beach, mi: d.topMI.beach },
     { label: 'Pool',      fl: d.topFL.pool,  mi: d.topMI.pool },
-    { label: 'Bedrooms',  fl: d.topFL.beds,  mi: d.topMI.beds },
-    { label: 'Bathrooms', fl: d.topFL.baths, mi: d.topMI.baths },
+    { label: 'Bedrooms',  fl: totalBeds(d.topFL) + ' total',  mi: totalBeds(d.topMI) + ' total' },
+    { label: 'Bathrooms', fl: totalBathsLabel(d.topFL), mi: totalBathsLabel(d.topMI) },
   ];
 
   const commentsHTML = d.comments.length
