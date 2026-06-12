@@ -200,9 +200,9 @@ const MI_HOUSES = [
 // so the columns line up in the detail view.
 function unitNotation(beds, full, half, forceHalf) {
   if (half > 0 || forceHalf) {
-    return beds + ' + ' + full + ' + ' + half;
+    return beds + ' / ' + full + ' / ' + half;
   }
-  return beds + ' + ' + full;
+  return beds + ' / ' + full;
 }
 
 // Per-house notation, e.g. "7 + 5 + 2" or "6 + 4"

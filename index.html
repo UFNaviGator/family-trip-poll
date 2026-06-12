@@ -532,7 +532,7 @@ function showDetail(h) {
       <div class="detail-stat"><div class="detail-stat-label">Pool</div><div class="detail-stat-value">${h.pool}</div></div>
     </div>
     <div class="detail-rooms">
-      <div class="detail-rooms-key">Rooms — <strong>bed + full bath + ½ bath</strong></div>
+      <div class="detail-rooms-key">Rooms — <strong>bed / full bath / ½ bath</strong></div>
       <div class="detail-rooms-grid">
         <div class="detail-room-cell"><div class="detail-room-label">${h.labelA}</div><div class="detail-room-val">${house1Notation(h)}</div></div>
         <div class="detail-room-cell"><div class="detail-room-label">${h.labelB}</div><div class="detail-room-val">${house2Notation(h)}</div></div>
@@ -552,7 +552,7 @@ function updateCompare() {
     { label: 'Cost',       flv: fl.cost,  miv: mi.cost },
     { label: 'Beachfront', flv: fl.beach, miv: mi.beach },
     { label: 'Pool',       flv: fl.pool,  miv: mi.pool },
-    { label: 'Rooms (bd+ba+½)', flv: totalNotation(fl), miv: totalNotation(mi) },
+    { label: 'Rooms (bd/ba/½)', flv: totalNotation(fl), miv: totalNotation(mi) },
   ];
 
   function cls(label, val) {
