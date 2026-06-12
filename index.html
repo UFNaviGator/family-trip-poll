@@ -145,6 +145,15 @@
   .detail-stat { background: #f7f4ef; border-radius: 8px; padding: 0.55rem 0.75rem; }
   .detail-stat-label { font-size: 0.67rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.08em; }
   .detail-stat-value { font-size: 0.85rem; font-weight: 500; color: #2c2a24; margin-top: 2px; }
+  .detail-rooms { margin-bottom: 1rem; }
+  .detail-rooms-key { font-size: 0.7rem; color: #aaa; margin-bottom: 0.5rem; }
+  .detail-rooms-key strong { color: #888; font-weight: 500; }
+  .detail-rooms-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.6rem; }
+  .detail-room-cell { background: #f7f4ef; border-radius: 8px; padding: 0.55rem 0.7rem; text-align: center; }
+  .detail-room-cell.total { background: #eef2f4; border: 1px solid #dde6ea; }
+  .detail-room-label { font-size: 0.68rem; color: #999; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .detail-room-cell.total .detail-room-label { color: #1a5a7a; font-weight: 500; }
+  .detail-room-val { font-size: 0.95rem; font-weight: 600; color: #2c2a24; margin-top: 3px; font-variant-numeric: tabular-nums; }
   .detail-tags { margin-bottom: 0.75rem; }
   .detail-tag {
     display: inline-block; border-radius: 5px; padding: 3px 9px;
@@ -519,10 +528,16 @@ function showDetail(h) {
     </div>
     <div class="detail-stats">
       <div class="detail-stat"><div class="detail-stat-label">Total Cost</div><div class="detail-stat-value">${h.cost}</div></div>
-      <div class="detail-stat"><div class="detail-stat-label">Bedrooms</div><div class="detail-stat-value">${bedBreakdown(h)}</div></div>
-      <div class="detail-stat"><div class="detail-stat-label">Bathrooms</div><div class="detail-stat-value">${bathBreakdown(h)}</div></div>
       <div class="detail-stat"><div class="detail-stat-label">Beachfront</div><div class="detail-stat-value">${h.beach}</div></div>
       <div class="detail-stat"><div class="detail-stat-label">Pool</div><div class="detail-stat-value">${h.pool}</div></div>
+    </div>
+    <div class="detail-rooms">
+      <div class="detail-rooms-key">Rooms — <strong>bed + full bath + ½ bath</strong></div>
+      <div class="detail-rooms-grid">
+        <div class="detail-room-cell"><div class="detail-room-label">${h.labelA}</div><div class="detail-room-val">${house1Notation(h)}</div></div>
+        <div class="detail-room-cell"><div class="detail-room-label">${h.labelB}</div><div class="detail-room-val">${house2Notation(h)}</div></div>
+        <div class="detail-room-cell total"><div class="detail-room-label">Combined</div><div class="detail-room-val">${totalNotation(h)}</div></div>
+      </div>
     </div>
     <div class="detail-tags">${h.extras.map(x => `<span class="detail-tag ${dest}">${x}</span>`).join('')}</div>
     <div class="detail-caveat ${dest}">${h.caveat}</div>
@@ -537,8 +552,7 @@ function updateCompare() {
     { label: 'Cost',       flv: fl.cost,  miv: mi.cost },
     { label: 'Beachfront', flv: fl.beach, miv: mi.beach },
     { label: 'Pool',       flv: fl.pool,  miv: mi.pool },
-    { label: 'Bedrooms',   flv: totalBeds(fl) + ' total',  miv: totalBeds(mi) + ' total' },
-    { label: 'Bathrooms',  flv: totalBathsLabel(fl), miv: totalBathsLabel(mi) },
+    { label: 'Rooms (bd+ba+½)', flv: totalNotation(fl), miv: totalNotation(mi) },
   ];
 
   function cls(label, val) {

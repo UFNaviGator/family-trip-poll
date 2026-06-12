@@ -295,8 +295,7 @@ function render(responses, respondentCount, generatedAt) {
     { label: 'Cost',      fl: d.topFL.cost,  mi: d.topMI.cost },
     { label: 'Beachfront',fl: d.topFL.beach, mi: d.topMI.beach },
     { label: 'Pool',      fl: d.topFL.pool,  mi: d.topMI.pool },
-    { label: 'Bedrooms',  fl: totalBeds(d.topFL) + ' total',  mi: totalBeds(d.topMI) + ' total' },
-    { label: 'Bathrooms', fl: totalBathsLabel(d.topFL), mi: totalBathsLabel(d.topMI) },
+    { label: 'Rooms (bd+ba+½)', fl: totalNotation(d.topFL), mi: totalNotation(d.topMI) },
   ];
 
   const commentsHTML = d.comments.length

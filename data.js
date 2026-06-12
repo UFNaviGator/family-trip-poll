@@ -194,38 +194,47 @@ const MI_HOUSES = [
    You normally don't need to edit below this line.
    ════════════════════════════════════════════════════════════ */
 
-// Combined bedroom total across both houses, e.g. 12
+// Notation: beds + full baths + half baths.
+// A trailing "+ 0" for half baths is dropped for cleanliness, UNLESS
+// forceHalf is true (used for the option total when any house has halves),
+// so the columns line up in the detail view.
+function unitNotation(beds, full, half, forceHalf) {
+  if (half > 0 || forceHalf) {
+    return beds + ' + ' + full + ' + ' + half;
+  }
+  return beds + ' + ' + full;
+}
+
+// Per-house notation, e.g. "7 + 5 + 2" or "6 + 4"
+function houseNotation(house) {
+  return unitNotation(house.beds || 0, house.fullBaths || 0, house.halfBaths || 0, false);
+}
+
+// Combined totals as an object
+function totals(h) {
+  return {
+    beds: (h.house1.beds || 0) + (h.house2.beds || 0),
+    full: (h.house1.fullBaths || 0) + (h.house2.fullBaths || 0),
+    half: (h.house1.halfBaths || 0) + (h.house2.halfBaths || 0),
+  };
+}
+
+// Combined bedroom count, e.g. 12
 function totalBeds(h) {
-  return (h.house1.beds || 0) + (h.house2.beds || 0);
+  return totals(h).beds;
 }
 
-// Combined bathroom label, e.g. "9 full + 3 half" or "9 full"
-function totalBathsLabel(h) {
-  const full = (h.house1.fullBaths || 0) + (h.house2.fullBaths || 0);
-  const half = (h.house1.halfBaths || 0) + (h.house2.halfBaths || 0);
-  return half > 0 ? full + ' full + ' + half + ' half' : full + ' full';
+// Option-total notation, e.g. "11 + 8 + 3" or "13 + 9"
+function totalNotation(h) {
+  const t = totals(h);
+  return unitNotation(t.beds, t.full, t.half, false);
 }
 
-// Per-house bath label, e.g. "4 + 2½" or "5"
-function houseBathLabel(house) {
-  const full = house.fullBaths || 0;
-  const half = house.halfBaths || 0;
-  return half > 0 ? full + ' + ' + half + '\u00BD' : '' + full;
-}
-
-// Short combined summary for the rank card, e.g. "12 bd · 9 ba"
+// Short summary for the rank card, e.g. "11 + 8 + 3"
 function shortBedBath(h) {
-  const beds = totalBeds(h);
-  const full = (h.house1.fullBaths || 0) + (h.house2.fullBaths || 0);
-  const half = (h.house1.halfBaths || 0) + (h.house2.halfBaths || 0);
-  const baStr = half > 0 ? full + '+' + half + '\u00BD' : '' + full;
-  return beds + ' bd · ' + baStr + ' ba';
+  return totalNotation(h);
 }
 
-// Full per-house breakdown for the detail panel
-function bedBreakdown(h) {
-  return h.house1.beds + ' + ' + h.house2.beds + ' = ' + totalBeds(h) + ' bedrooms';
-}
-function bathBreakdown(h) {
-  return houseBathLabel(h.house1) + ' + ' + houseBathLabel(h.house2) + ' = ' + totalBathsLabel(h);
-}
+// Per-house values for the detail panel
+function house1Notation(h) { return houseNotation(h.house1); }
+function house2Notation(h) { return houseNotation(h.house2); }
