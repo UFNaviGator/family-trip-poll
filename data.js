@@ -35,11 +35,11 @@ const TOTAL_INVITED = 27;
 // ── Florida ───────────────────────────────────────────────────────────────────
 
 const FL_HOUSES = [
-  {
+  /*{
     id: 'fl1',
     dest: 'fl',
     name: 'Seven Seas + Sea-La-Vie',
-    house1: { beds: 7, fullBaths: 5, halfBaths: 0 },
+    house1: { beds: 7, fullBaths: 7, halfBaths: 2 },
     house2: { beds: 6, fullBaths: 4, halfBaths: 0 },
     beach: 'Yes (main) / Walk (2nd)',
     pool:  'Yes / Yes',
@@ -58,8 +58,37 @@ const FL_HOUSES = [
     labelB: 'Sea-La-Vie',
     linkA:  'https://www.capeandcoast.com/rentals/seven-seas',
     linkB:  'https://www.collinsvacationrentals.com/rentals/sea-la-vie',
-  },
+  },*/
   {
+    id: 'fl1',
+    dest: 'fl',
+    name: 'Seven Seas + Saltwater & Sunsets',
+    house1: { beds: 7, fullBaths: 7, halfBaths: 2 },
+    house2: { beds: 5, fullBaths: 5, halfBaths: 0 },
+    beach: 'Yes (main) / Walk 2 min (2nd)',
+    pool:  'Yes / Yes (screened)',
+    cost:  '$24,197',
+    extras: [
+      'Seven Seas recently remodeled — top of The Plantation',
+      'Near-360° rooftop deck with Gulf, Bay & Cut views',
+      'Private pool with splash pad + pergola',
+      'Elevator access to all floors',
+      'Wet bar on 3rd floor lounge',
+      'Gourmet kitchen — dual fridges, gas stove',
+      'Fish cleaning station & private boardwalk with ramp',
+      'Screened pool + tennis & basketball at 2nd house',
+      '$400 beach gear credit included (bikes, kayaks, paddleboards)',
+    ],
+    caveat: 'Both houses in The Plantation on the east end of the island. Dogs allowed at Seven Seas (max 2, under 30 lbs). Sleeps up to 24 + 12 combined.',
+    photoA:  'https://img.trackhs.com/1200x/https://track-pm.s3.amazonaws.com/capeandcoast/image/a23a9214-42a2-4ede-a989-afd9401fc74c',
+    photoB:  'https://media.vrbo.com/lodging/121000000/120840000/120838600/120838590/2b054f26.jpg',
+    labelA: 'Seven Seas',
+    labelB: 'Saltwater & Sunsets',
+    linkA:  'https://www.capeandcoast.com/rentals/seven-seas',
+    linkB:  'https://www.vrbo.com/4862963',
+  },
+
+  /*{
     id: 'fl2',
     dest: 'fl',
     name: 'Casa Bella Luca + AB Sea',
@@ -82,8 +111,35 @@ const FL_HOUSES = [
     labelB: 'AB Sea',
     linkA:  'https://www.collinsvacationrentals.com/rentals/casa-bellaluca',
     linkB:  'https://www.collinsvacationrentals.com/rentals/a-b-sea',
-  },
+  },*/
   {
+    id: 'fl2',
+    dest: 'fl',
+    name: 'Royal Seas + Amethyst',
+    house1: { beds: 7, fullBaths: 7, halfBaths: 1 },
+    house2: { beds: 5, fullBaths: 4, halfBaths: 1 },
+    beach: 'Yes (main) / Across street (2nd)',
+    pool:  'Yes + spa / Yes',
+    cost:  '$23,886',
+    extras: [
+      'Royal Seas — one of the largest beachfront homes on SGI',
+      'Pool with overflow spa + outdoor kitchen',
+      'Theater room + pool table game room',
+      'Five wet bars & five gas fireplaces',
+      'Elevator + SubZero fridge, double dishwashers & ovens',
+      'Amethyst has screened porch & basketball court',
+      'Royal Seas has Plantation Clubhouse access',
+    ],
+    caveat: 'Neither house allows pets. Royal Seas pool heat is extra ($400/wk); elevator also has a $100 fee. Amethyst is across the street from beach, not beachfront, and does NOT have Plantation Clubhouse access. Amethyst noted as "a bit dated" in reviews.',
+    photoA:  'https://photos.barefoot.com/v3ccln0929/images/properties/49108/1+-+2332+Schooner+Landing+Drone-3.jpg?v=85993https://photos.barefoot.com/v3ccln0929/images/properties/49108/1+-+2332+Schooner+Landing+Drone-3.jpg?v=85993',
+    photoB:  'https://photos.barefoot.com/v3ccln0929/images/properties/7303/1+-+Exterior-Amethyst-_KLH8964.JPG?v=72447',
+    labelA: 'Royal Seas',
+    labelB: 'Amethyst',
+    linkA:  'https://www.collinsvacationrentals.com/rentals/royal-seas',
+    linkB:  'https://www.collinsvacationrentals.com/rentals/amethyst',
+  },
+
+  /*{
     id: 'fl3',
     dest: 'fl',
     name: 'Royal Seas + Amethyst',
@@ -106,7 +162,34 @@ const FL_HOUSES = [
     labelB: 'Amethyst',
     linkA:  'http://collinsvacationrentals.com/rentals/royal-seas',
     linkB:  'https://www.collinsvacationrentals.com/rentals/amethyst',
+  },*/
+  {
+    id: 'fl3',
+    dest: 'fl',
+    name: 'Casa Bella Luca + AB Sea',
+    house1: { beds: 7, fullBaths: 7, halfBaths: 1 },
+    house2: { beds: 5, fullBaths: 5, halfBaths: 0 },
+    beach: 'Yes, beachfront (main) / Beach access path (2nd)',
+    pool:  'Yes / Yes',
+    cost:  '$20,770',
+    extras: [
+      'Casa Bella Luca — the "Cartel house", we know it well',
+      'Private boardwalk to beach + pool deck entertaining',
+      'Media room with pool table & Blu-ray',
+      'Two wet bars, two dining areas, two ovens & dishwashers',
+      'Elevator at both houses',
+      'AB Sea is pet friendly (2 dogs under 50 lbs)',
+      'Both have full Plantation Clubhouse access incl. pickleball',
+    ],
+    caveat: 'Casa Bella Luca does not allow pets; AB Sea does. Pool heat extra ($400/wk) and elevator has a $100 fee at both houses. AB Sea spa has been removed. AB Sea is beach access, not beachfront.',
+    photoA:  'https://photos.barefoot.com/v3ccln0929/images/properties/52600/%232.jpg?v=93103',
+    photoB:  'https://photos.barefoot.com/v3ccln0929/images/properties/46130/1+-+A-B-Sea-Exterior.jpg?v=77087',
+    labelA: 'Casa Bella Luca',
+    labelB: 'AB Sea',
+    linkA:  'https://www.collinsvacationrentals.com/rentals/casa-bellaluca',
+    linkB:  'https://www.collinsvacationrentals.com/rentals/a-b-sea',
   },
+
 ];
 
 // ── Michigan ──────────────────────────────────────────────────────────────────
