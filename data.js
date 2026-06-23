@@ -225,7 +225,7 @@ const MI_HOUSES = [
     house2: { beds: 5, fullBaths: 3, halfBaths: 0 },
     beach: 'Across from beach (main) / Walk (2 min shortcut)',
     pool:  'Yes / No',
-    cost:  '~$32,000',
+    cost:  '$36,444.32',
     extras: [
       'Lamb Haven is directly across from the beach',
       'Private pool, covered seating & bonfire pit',
