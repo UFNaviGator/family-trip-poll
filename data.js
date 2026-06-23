@@ -67,7 +67,7 @@ const FL_HOUSES = [
     house2: { beds: 5, fullBaths: 5, halfBaths: 0 },
     beach: 'Yes (main) / Walk 2 min (2nd)',
     pool:  'Yes / Yes (screened)',
-    cost:  '$24,197',
+    cost:  '$27,416',
     extras: [
       'Seven Seas recently remodeled — top of The Plantation',
       'Near-360° rooftop deck with Gulf, Bay & Cut views',
